@@ -13,4 +13,5 @@ type Config struct {
 	DatabaseConf config.DatabaseConf
 	RedisConf    redis.RedisConf
 	AsynqConf    asynq.AsynqConf
+	CoreRpc      zrpc.RpcClientConf
 }

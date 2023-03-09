@@ -9,16 +9,16 @@ import (
 	"github.com/suyuan32/simple-admin-job/ent"
 )
 
-// The JobFunc type is an adapter to allow the use of ordinary
-// function as Job mutator.
-type JobFunc func(context.Context, *ent.JobMutation) (ent.Value, error)
+// The TaskFunc type is an adapter to allow the use of ordinary
+// function as Task mutator.
+type TaskFunc func(context.Context, *ent.TaskMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f JobFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.JobMutation); ok {
+func (f TaskFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.TaskMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.JobMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TaskMutation", m)
 }
 
 // Condition is a hook condition function.

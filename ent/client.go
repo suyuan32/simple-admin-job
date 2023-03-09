@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
-	"github.com/suyuan32/simple-admin-job/ent/job"
+	"github.com/suyuan32/simple-admin-job/ent/task"
 )
 
 // Client is the client that holds all ent builders.
@@ -21,8 +21,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Job is the client for interacting with the Job builders.
-	Job *JobClient
+	// Task is the client for interacting with the Task builders.
+	Task *TaskClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -36,7 +36,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Job = NewJobClient(c.config)
+	c.Task = NewTaskClient(c.config)
 }
 
 type (
@@ -119,7 +119,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:    ctx,
 		config: cfg,
-		Job:    NewJobClient(cfg),
+		Task:   NewTaskClient(cfg),
 	}, nil
 }
 
@@ -139,14 +139,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:    ctx,
 		config: cfg,
-		Job:    NewJobClient(cfg),
+		Task:   NewTaskClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Job.
+//		Task.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -168,111 +168,111 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Job.Use(hooks...)
+	c.Task.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Job.Intercept(interceptors...)
+	c.Task.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
-	case *JobMutation:
-		return c.Job.mutate(ctx, m)
+	case *TaskMutation:
+		return c.Task.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
 }
 
-// JobClient is a client for the Job schema.
-type JobClient struct {
+// TaskClient is a client for the Task schema.
+type TaskClient struct {
 	config
 }
 
-// NewJobClient returns a client for the Job from the given config.
-func NewJobClient(c config) *JobClient {
-	return &JobClient{config: c}
+// NewTaskClient returns a client for the Task from the given config.
+func NewTaskClient(c config) *TaskClient {
+	return &TaskClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `job.Hooks(f(g(h())))`.
-func (c *JobClient) Use(hooks ...Hook) {
-	c.hooks.Job = append(c.hooks.Job, hooks...)
+// A call to `Use(f, g, h)` equals to `task.Hooks(f(g(h())))`.
+func (c *TaskClient) Use(hooks ...Hook) {
+	c.hooks.Task = append(c.hooks.Task, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `job.Intercept(f(g(h())))`.
-func (c *JobClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Job = append(c.inters.Job, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `task.Intercept(f(g(h())))`.
+func (c *TaskClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Task = append(c.inters.Task, interceptors...)
 }
 
-// Create returns a builder for creating a Job entity.
-func (c *JobClient) Create() *JobCreate {
-	mutation := newJobMutation(c.config, OpCreate)
-	return &JobCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Task entity.
+func (c *TaskClient) Create() *TaskCreate {
+	mutation := newTaskMutation(c.config, OpCreate)
+	return &TaskCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Job entities.
-func (c *JobClient) CreateBulk(builders ...*JobCreate) *JobCreateBulk {
-	return &JobCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Task entities.
+func (c *TaskClient) CreateBulk(builders ...*TaskCreate) *TaskCreateBulk {
+	return &TaskCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Job.
-func (c *JobClient) Update() *JobUpdate {
-	mutation := newJobMutation(c.config, OpUpdate)
-	return &JobUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Task.
+func (c *TaskClient) Update() *TaskUpdate {
+	mutation := newTaskMutation(c.config, OpUpdate)
+	return &TaskUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *JobClient) UpdateOne(j *Job) *JobUpdateOne {
-	mutation := newJobMutation(c.config, OpUpdateOne, withJob(j))
-	return &JobUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TaskClient) UpdateOne(t *Task) *TaskUpdateOne {
+	mutation := newTaskMutation(c.config, OpUpdateOne, withTask(t))
+	return &TaskUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *JobClient) UpdateOneID(id int) *JobUpdateOne {
-	mutation := newJobMutation(c.config, OpUpdateOne, withJobID(id))
-	return &JobUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TaskClient) UpdateOneID(id uint64) *TaskUpdateOne {
+	mutation := newTaskMutation(c.config, OpUpdateOne, withTaskID(id))
+	return &TaskUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Job.
-func (c *JobClient) Delete() *JobDelete {
-	mutation := newJobMutation(c.config, OpDelete)
-	return &JobDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Task.
+func (c *TaskClient) Delete() *TaskDelete {
+	mutation := newTaskMutation(c.config, OpDelete)
+	return &TaskDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *JobClient) DeleteOne(j *Job) *JobDeleteOne {
-	return c.DeleteOneID(j.ID)
+func (c *TaskClient) DeleteOne(t *Task) *TaskDeleteOne {
+	return c.DeleteOneID(t.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *JobClient) DeleteOneID(id int) *JobDeleteOne {
-	builder := c.Delete().Where(job.ID(id))
+func (c *TaskClient) DeleteOneID(id uint64) *TaskDeleteOne {
+	builder := c.Delete().Where(task.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &JobDeleteOne{builder}
+	return &TaskDeleteOne{builder}
 }
 
-// Query returns a query builder for Job.
-func (c *JobClient) Query() *JobQuery {
-	return &JobQuery{
+// Query returns a query builder for Task.
+func (c *TaskClient) Query() *TaskQuery {
+	return &TaskQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeJob},
+		ctx:    &QueryContext{Type: TypeTask},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Job entity by its id.
-func (c *JobClient) Get(ctx context.Context, id int) (*Job, error) {
-	return c.Query().Where(job.ID(id)).Only(ctx)
+// Get returns a Task entity by its id.
+func (c *TaskClient) Get(ctx context.Context, id uint64) (*Task, error) {
+	return c.Query().Where(task.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *JobClient) GetX(ctx context.Context, id int) *Job {
+func (c *TaskClient) GetX(ctx context.Context, id uint64) *Task {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -281,36 +281,36 @@ func (c *JobClient) GetX(ctx context.Context, id int) *Job {
 }
 
 // Hooks returns the client hooks.
-func (c *JobClient) Hooks() []Hook {
-	return c.hooks.Job
+func (c *TaskClient) Hooks() []Hook {
+	return c.hooks.Task
 }
 
 // Interceptors returns the client interceptors.
-func (c *JobClient) Interceptors() []Interceptor {
-	return c.inters.Job
+func (c *TaskClient) Interceptors() []Interceptor {
+	return c.inters.Task
 }
 
-func (c *JobClient) mutate(ctx context.Context, m *JobMutation) (Value, error) {
+func (c *TaskClient) mutate(ctx context.Context, m *TaskMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&JobCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TaskCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&JobUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TaskUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&JobUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&TaskUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&JobDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&TaskDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Job mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Task mutation op: %q", m.Op())
 	}
 }
 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Job []ent.Hook
+		Task []ent.Hook
 	}
 	inters struct {
-		Job []ent.Interceptor
+		Task []ent.Interceptor
 	}
 )

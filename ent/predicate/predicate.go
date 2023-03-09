@@ -6,5 +6,5 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Job is the predicate function for job builders.
-type Job func(*sql.Selector)
+// Task is the predicate function for task builders.
+type Task func(*sql.Selector)
