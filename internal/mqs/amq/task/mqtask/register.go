@@ -3,7 +3,7 @@ package mqtask
 import (
 	"github.com/hibiken/asynq"
 
-	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/handler/base"
+	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/handler/amq/base"
 	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/types/pattern"
 )
 

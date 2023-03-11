@@ -20,11 +20,20 @@ type (
 	IDReq        = job.IDReq
 	IDsReq       = job.IDsReq
 	PageInfoReq  = job.PageInfoReq
+	TaskInfo     = job.TaskInfo
+	TaskListReq  = job.TaskListReq
+	TaskListResp = job.TaskListResp
 	UUIDReq      = job.UUIDReq
 	UUIDsReq     = job.UUIDsReq
 
 	Job interface {
 		InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error)
+		// Task management
+		CreateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseIDResp, error)
+		UpdateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseResp, error)
+		GetTaskList(ctx context.Context, in *TaskListReq, opts ...grpc.CallOption) (*TaskListResp, error)
+		GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error)
+		DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
 	}
 
 	defaultJob struct {
@@ -41,4 +50,30 @@ func NewJob(cli zrpc.Client) Job {
 func (m *defaultJob) InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error) {
 	client := job.NewJobClient(m.cli.Conn())
 	return client.InitDatabase(ctx, in, opts...)
+}
+
+// Task management
+func (m *defaultJob) CreateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.CreateTask(ctx, in, opts...)
+}
+
+func (m *defaultJob) UpdateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.UpdateTask(ctx, in, opts...)
+}
+
+func (m *defaultJob) GetTaskList(ctx context.Context, in *TaskListReq, opts ...grpc.CallOption) (*TaskListResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.GetTaskList(ctx, in, opts...)
+}
+
+func (m *defaultJob) GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.GetTaskById(ctx, in, opts...)
+}
+
+func (m *defaultJob) DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.DeleteTask(ctx, in, opts...)
 }

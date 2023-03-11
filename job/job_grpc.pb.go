@@ -24,6 +24,17 @@ const _ = grpc.SupportPackageIsVersion7
 type JobClient interface {
 	// group: base
 	InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error)
+	// Task management
+	// group: task
+	CreateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: task
+	UpdateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseResp, error)
+	// group: task
+	GetTaskList(ctx context.Context, in *TaskListReq, opts ...grpc.CallOption) (*TaskListResp, error)
+	// group: task
+	GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error)
+	// group: task
+	DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
 }
 
 type jobClient struct {
@@ -43,12 +54,68 @@ func (c *jobClient) InitDatabase(ctx context.Context, in *Empty, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *jobClient) CreateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/job.Job/createTask", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) UpdateTask(ctx context.Context, in *TaskInfo, opts ...grpc.CallOption) (*BaseResp, error) {
+	out := new(BaseResp)
+	err := c.cc.Invoke(ctx, "/job.Job/updateTask", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) GetTaskList(ctx context.Context, in *TaskListReq, opts ...grpc.CallOption) (*TaskListResp, error) {
+	out := new(TaskListResp)
+	err := c.cc.Invoke(ctx, "/job.Job/getTaskList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error) {
+	out := new(TaskInfo)
+	err := c.cc.Invoke(ctx, "/job.Job/getTaskById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error) {
+	out := new(BaseResp)
+	err := c.cc.Invoke(ctx, "/job.Job/deleteTask", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServer is the server API for Job service.
 // All implementations must embed UnimplementedJobServer
 // for forward compatibility
 type JobServer interface {
 	// group: base
 	InitDatabase(context.Context, *Empty) (*BaseResp, error)
+	// Task management
+	// group: task
+	CreateTask(context.Context, *TaskInfo) (*BaseIDResp, error)
+	// group: task
+	UpdateTask(context.Context, *TaskInfo) (*BaseResp, error)
+	// group: task
+	GetTaskList(context.Context, *TaskListReq) (*TaskListResp, error)
+	// group: task
+	GetTaskById(context.Context, *IDReq) (*TaskInfo, error)
+	// group: task
+	DeleteTask(context.Context, *IDsReq) (*BaseResp, error)
 	mustEmbedUnimplementedJobServer()
 }
 
@@ -58,6 +125,21 @@ type UnimplementedJobServer struct {
 
 func (UnimplementedJobServer) InitDatabase(context.Context, *Empty) (*BaseResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitDatabase not implemented")
+}
+func (UnimplementedJobServer) CreateTask(context.Context, *TaskInfo) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTask not implemented")
+}
+func (UnimplementedJobServer) UpdateTask(context.Context, *TaskInfo) (*BaseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTask not implemented")
+}
+func (UnimplementedJobServer) GetTaskList(context.Context, *TaskListReq) (*TaskListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTaskList not implemented")
+}
+func (UnimplementedJobServer) GetTaskById(context.Context, *IDReq) (*TaskInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTaskById not implemented")
+}
+func (UnimplementedJobServer) DeleteTask(context.Context, *IDsReq) (*BaseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTask not implemented")
 }
 func (UnimplementedJobServer) mustEmbedUnimplementedJobServer() {}
 
@@ -90,6 +172,96 @@ func _Job_InitDatabase_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Job_CreateTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).CreateTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/createTask",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).CreateTask(ctx, req.(*TaskInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_UpdateTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).UpdateTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/updateTask",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).UpdateTask(ctx, req.(*TaskInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_GetTaskList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).GetTaskList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/getTaskList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).GetTaskList(ctx, req.(*TaskListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_GetTaskById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).GetTaskById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/getTaskById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).GetTaskById(ctx, req.(*IDReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_DeleteTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).DeleteTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/deleteTask",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).DeleteTask(ctx, req.(*IDsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Job_ServiceDesc is the grpc.ServiceDesc for Job service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +272,26 @@ var Job_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "initDatabase",
 			Handler:    _Job_InitDatabase_Handler,
+		},
+		{
+			MethodName: "createTask",
+			Handler:    _Job_CreateTask_Handler,
+		},
+		{
+			MethodName: "updateTask",
+			Handler:    _Job_UpdateTask_Handler,
+		},
+		{
+			MethodName: "getTaskList",
+			Handler:    _Job_GetTaskList_Handler,
+		},
+		{
+			MethodName: "getTaskById",
+			Handler:    _Job_GetTaskById_Handler,
+		},
+		{
+			MethodName: "deleteTask",
+			Handler:    _Job_DeleteTask_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
