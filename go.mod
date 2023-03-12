@@ -8,8 +8,7 @@ require (
 	entgo.io/ent v0.11.9
 	github.com/hibiken/asynq v0.24.0
 	github.com/pkg/errors v0.9.1
-	github.com/suyuan32/simple-admin-common v0.2.6
-	github.com/suyuan32/simple-admin-core v0.2.6
+	github.com/suyuan32/simple-admin-common v0.2.7
 	github.com/zeromicro/go-zero v1.4.4
 	google.golang.org/grpc v1.53.0
 	google.golang.org/protobuf v1.28.1
