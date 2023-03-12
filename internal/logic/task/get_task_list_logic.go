@@ -34,9 +34,6 @@ func (l *GetTaskListLogic) GetTaskList(in *job.TaskListReq) (*job.TaskListResp, 
 	if in.TaskGroup != "" {
 		predicates = append(predicates, task.TaskGroupContains(in.TaskGroup))
 	}
-	if in.CronExpression != "" {
-		predicates = append(predicates, task.CronExpressionContains(in.CronExpression))
-	}
 	result, err := l.svcCtx.DB.Task.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize)
 
 	if err != nil {
@@ -57,7 +54,6 @@ func (l *GetTaskListLogic) GetTaskList(in *job.TaskListReq) (*job.TaskListResp, 
 			CronExpression: v.CronExpression,
 			Pattern:        v.Pattern,
 			Payload:        v.Payload,
-			EntryId:        int64(v.EntryID),
 		})
 	}
 

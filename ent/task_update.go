@@ -91,19 +91,6 @@ func (tu *TaskUpdate) SetPayload(s string) *TaskUpdate {
 	return tu
 }
 
-// SetEntryID sets the "entry_id" field.
-func (tu *TaskUpdate) SetEntryID(i int) *TaskUpdate {
-	tu.mutation.ResetEntryID()
-	tu.mutation.SetEntryID(i)
-	return tu
-}
-
-// AddEntryID adds i to the "entry_id" field.
-func (tu *TaskUpdate) AddEntryID(i int) *TaskUpdate {
-	tu.mutation.AddEntryID(i)
-	return tu
-}
-
 // Mutation returns the TaskMutation object of the builder.
 func (tu *TaskUpdate) Mutation() *TaskMutation {
 	return tu.mutation
@@ -180,12 +167,6 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
-	}
-	if value, ok := tu.mutation.EntryID(); ok {
-		_spec.SetField(task.FieldEntryID, field.TypeInt, value)
-	}
-	if value, ok := tu.mutation.AddedEntryID(); ok {
-		_spec.AddField(task.FieldEntryID, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -267,19 +248,6 @@ func (tuo *TaskUpdateOne) SetPattern(s string) *TaskUpdateOne {
 // SetPayload sets the "payload" field.
 func (tuo *TaskUpdateOne) SetPayload(s string) *TaskUpdateOne {
 	tuo.mutation.SetPayload(s)
-	return tuo
-}
-
-// SetEntryID sets the "entry_id" field.
-func (tuo *TaskUpdateOne) SetEntryID(i int) *TaskUpdateOne {
-	tuo.mutation.ResetEntryID()
-	tuo.mutation.SetEntryID(i)
-	return tuo
-}
-
-// AddEntryID adds i to the "entry_id" field.
-func (tuo *TaskUpdateOne) AddEntryID(i int) *TaskUpdateOne {
-	tuo.mutation.AddEntryID(i)
 	return tuo
 }
 
@@ -389,12 +357,6 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (_node *Task, err error) 
 	}
 	if value, ok := tuo.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
-	}
-	if value, ok := tuo.mutation.EntryID(); ok {
-		_spec.SetField(task.FieldEntryID, field.TypeInt, value)
-	}
-	if value, ok := tuo.mutation.AddedEntryID(); ok {
-		_spec.AddField(task.FieldEntryID, field.TypeInt, value)
 	}
 	_node = &Task{config: tuo.config}
 	_spec.Assign = _node.assignValues

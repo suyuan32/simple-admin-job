@@ -12,7 +12,6 @@ message TaskInfo {
   string cron_expression = 7;
   string pattern = 8;
   string payload = 9;
-  int64 entry_id = 10;
 }
 
 message TaskListResp {
@@ -25,7 +24,6 @@ message TaskListReq {
   uint64 page_size = 2;
   string name = 3;
   string task_group = 4;
-  string cron_expression = 5;
 }
 
 

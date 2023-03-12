@@ -27,8 +27,6 @@ const (
 	FieldPattern = "pattern"
 	// FieldPayload holds the string denoting the payload field in the database.
 	FieldPayload = "payload"
-	// FieldEntryID holds the string denoting the entry_id field in the database.
-	FieldEntryID = "entry_id"
 	// Table holds the table name of the task in the database.
 	Table = "sys_tasks"
 )
@@ -44,7 +42,6 @@ var Columns = []string{
 	FieldCronExpression,
 	FieldPattern,
 	FieldPayload,
-	FieldEntryID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

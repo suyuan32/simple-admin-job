@@ -42,8 +42,6 @@ type TaskMutation struct {
 	cron_expression *string
 	pattern         *string
 	payload         *string
-	entry_id        *int
-	addentry_id     *int
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Task, error)
@@ -476,62 +474,6 @@ func (m *TaskMutation) ResetPayload() {
 	m.payload = nil
 }
 
-// SetEntryID sets the "entry_id" field.
-func (m *TaskMutation) SetEntryID(i int) {
-	m.entry_id = &i
-	m.addentry_id = nil
-}
-
-// EntryID returns the value of the "entry_id" field in the mutation.
-func (m *TaskMutation) EntryID() (r int, exists bool) {
-	v := m.entry_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldEntryID returns the old "entry_id" field's value of the Task entity.
-// If the Task object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TaskMutation) OldEntryID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldEntryID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldEntryID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldEntryID: %w", err)
-	}
-	return oldValue.EntryID, nil
-}
-
-// AddEntryID adds i to the "entry_id" field.
-func (m *TaskMutation) AddEntryID(i int) {
-	if m.addentry_id != nil {
-		*m.addentry_id += i
-	} else {
-		m.addentry_id = &i
-	}
-}
-
-// AddedEntryID returns the value that was added to the "entry_id" field in this mutation.
-func (m *TaskMutation) AddedEntryID() (r int, exists bool) {
-	v := m.addentry_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetEntryID resets all changes to the "entry_id" field.
-func (m *TaskMutation) ResetEntryID() {
-	m.entry_id = nil
-	m.addentry_id = nil
-}
-
 // Where appends a list predicates to the TaskMutation builder.
 func (m *TaskMutation) Where(ps ...predicate.Task) {
 	m.predicates = append(m.predicates, ps...)
@@ -566,7 +508,7 @@ func (m *TaskMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TaskMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.created_at != nil {
 		fields = append(fields, task.FieldCreatedAt)
 	}
@@ -590,9 +532,6 @@ func (m *TaskMutation) Fields() []string {
 	}
 	if m.payload != nil {
 		fields = append(fields, task.FieldPayload)
-	}
-	if m.entry_id != nil {
-		fields = append(fields, task.FieldEntryID)
 	}
 	return fields
 }
@@ -618,8 +557,6 @@ func (m *TaskMutation) Field(name string) (ent.Value, bool) {
 		return m.Pattern()
 	case task.FieldPayload:
 		return m.Payload()
-	case task.FieldEntryID:
-		return m.EntryID()
 	}
 	return nil, false
 }
@@ -645,8 +582,6 @@ func (m *TaskMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPattern(ctx)
 	case task.FieldPayload:
 		return m.OldPayload(ctx)
-	case task.FieldEntryID:
-		return m.OldEntryID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Task field %s", name)
 }
@@ -712,13 +647,6 @@ func (m *TaskMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPayload(v)
 		return nil
-	case task.FieldEntryID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetEntryID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Task field %s", name)
 }
@@ -730,9 +658,6 @@ func (m *TaskMutation) AddedFields() []string {
 	if m.addstatus != nil {
 		fields = append(fields, task.FieldStatus)
 	}
-	if m.addentry_id != nil {
-		fields = append(fields, task.FieldEntryID)
-	}
 	return fields
 }
 
@@ -743,8 +668,6 @@ func (m *TaskMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case task.FieldStatus:
 		return m.AddedStatus()
-	case task.FieldEntryID:
-		return m.AddedEntryID()
 	}
 	return nil, false
 }
@@ -760,13 +683,6 @@ func (m *TaskMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddStatus(v)
-		return nil
-	case task.FieldEntryID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddEntryID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Task numeric field %s", name)
@@ -827,9 +743,6 @@ func (m *TaskMutation) ResetField(name string) error {
 		return nil
 	case task.FieldPayload:
 		m.ResetPayload()
-		return nil
-	case task.FieldEntryID:
-		m.ResetEntryID()
 		return nil
 	}
 	return fmt.Errorf("unknown Task field %s", name)

@@ -94,11 +94,6 @@ func Payload(v string) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldPayload, v))
 }
 
-// EntryID applies equality check predicate on the "entry_id" field. It's identical to EntryIDEQ.
-func EntryID(v int) predicate.Task {
-	return predicate.Task(sql.FieldEQ(FieldEntryID, v))
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldCreatedAt, v))
@@ -552,46 +547,6 @@ func PayloadEqualFold(v string) predicate.Task {
 // PayloadContainsFold applies the ContainsFold predicate on the "payload" field.
 func PayloadContainsFold(v string) predicate.Task {
 	return predicate.Task(sql.FieldContainsFold(FieldPayload, v))
-}
-
-// EntryIDEQ applies the EQ predicate on the "entry_id" field.
-func EntryIDEQ(v int) predicate.Task {
-	return predicate.Task(sql.FieldEQ(FieldEntryID, v))
-}
-
-// EntryIDNEQ applies the NEQ predicate on the "entry_id" field.
-func EntryIDNEQ(v int) predicate.Task {
-	return predicate.Task(sql.FieldNEQ(FieldEntryID, v))
-}
-
-// EntryIDIn applies the In predicate on the "entry_id" field.
-func EntryIDIn(vs ...int) predicate.Task {
-	return predicate.Task(sql.FieldIn(FieldEntryID, vs...))
-}
-
-// EntryIDNotIn applies the NotIn predicate on the "entry_id" field.
-func EntryIDNotIn(vs ...int) predicate.Task {
-	return predicate.Task(sql.FieldNotIn(FieldEntryID, vs...))
-}
-
-// EntryIDGT applies the GT predicate on the "entry_id" field.
-func EntryIDGT(v int) predicate.Task {
-	return predicate.Task(sql.FieldGT(FieldEntryID, v))
-}
-
-// EntryIDGTE applies the GTE predicate on the "entry_id" field.
-func EntryIDGTE(v int) predicate.Task {
-	return predicate.Task(sql.FieldGTE(FieldEntryID, v))
-}
-
-// EntryIDLT applies the LT predicate on the "entry_id" field.
-func EntryIDLT(v int) predicate.Task {
-	return predicate.Task(sql.FieldLT(FieldEntryID, v))
-}
-
-// EntryIDLTE applies the LTE predicate on the "entry_id" field.
-func EntryIDLTE(v int) predicate.Task {
-	return predicate.Task(sql.FieldLTE(FieldEntryID, v))
 }
 
 // And groups predicates with the AND operator between them.

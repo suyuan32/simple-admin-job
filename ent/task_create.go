@@ -92,12 +92,6 @@ func (tc *TaskCreate) SetPayload(s string) *TaskCreate {
 	return tc
 }
 
-// SetEntryID sets the "entry_id" field.
-func (tc *TaskCreate) SetEntryID(i int) *TaskCreate {
-	tc.mutation.SetEntryID(i)
-	return tc
-}
-
 // SetID sets the "id" field.
 func (tc *TaskCreate) SetID(u uint64) *TaskCreate {
 	tc.mutation.SetID(u)
@@ -176,9 +170,6 @@ func (tc *TaskCreate) check() error {
 	if _, ok := tc.mutation.Payload(); !ok {
 		return &ValidationError{Name: "payload", err: errors.New(`ent: missing required field "Task.payload"`)}
 	}
-	if _, ok := tc.mutation.EntryID(); !ok {
-		return &ValidationError{Name: "entry_id", err: errors.New(`ent: missing required field "Task.entry_id"`)}
-	}
 	return nil
 }
 
@@ -242,10 +233,6 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
 		_node.Payload = value
-	}
-	if value, ok := tc.mutation.EntryID(); ok {
-		_spec.SetField(task.FieldEntryID, field.TypeInt, value)
-		_node.EntryID = value
 	}
 	return _node, _spec
 }

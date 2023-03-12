@@ -21,7 +21,6 @@ func (Task) Fields() []ent.Field {
 		field.String("cron_expression").Comment("Cron expression | 定时任务表达式"),
 		field.String("pattern").Comment("Cron Pattern | 任务的模式 （用于区分和确定要执行的任务）"),
 		field.String("payload").Comment("The data used in cron (JSON string) | 任务需要的数据(JSON 字符串)"),
-		field.Int("entry_id").Comment("The entry ID of the task | 任务启动返回的ID"),
 	}
 }
 

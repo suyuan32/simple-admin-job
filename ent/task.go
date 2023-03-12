@@ -32,8 +32,6 @@ type Task struct {
 	Pattern string `json:"pattern,omitempty"`
 	// The data used in cron (JSON string) | 任务需要的数据(JSON 字符串)
 	Payload string `json:"payload,omitempty"`
-	// The entry ID of the task | 任务启动返回的ID
-	EntryID int `json:"entry_id,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -41,7 +39,7 @@ func (*Task) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case task.FieldID, task.FieldStatus, task.FieldEntryID:
+		case task.FieldID, task.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case task.FieldName, task.FieldTaskGroup, task.FieldCronExpression, task.FieldPattern, task.FieldPayload:
 			values[i] = new(sql.NullString)
@@ -116,12 +114,6 @@ func (t *Task) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.Payload = value.String
 			}
-		case task.FieldEntryID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field entry_id", values[i])
-			} else if value.Valid {
-				t.EntryID = int(value.Int64)
-			}
 		}
 	}
 	return nil
@@ -173,9 +165,6 @@ func (t *Task) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("payload=")
 	builder.WriteString(t.Payload)
-	builder.WriteString(", ")
-	builder.WriteString("entry_id=")
-	builder.WriteString(fmt.Sprintf("%v", t.EntryID))
 	builder.WriteByte(')')
 	return builder.String()
 }

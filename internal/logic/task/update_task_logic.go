@@ -34,7 +34,6 @@ func (l *UpdateTaskLogic) UpdateTask(in *job.TaskInfo) (*job.BaseResp, error) {
 		SetNotEmptyCronExpression(in.CronExpression).
 		SetNotEmptyPattern(in.Pattern).
 		SetNotEmptyPayload(in.Payload).
-		SetNotEmptyEntryID(int(in.EntryId)).
 		Exec(l.ctx)
 
 	if err != nil {

@@ -1,3 +1,3 @@
 package pattern
 
-const RecordHelloWorld = "schedule:record_hello_world"
+const RecordHelloWorld = "hello_world"

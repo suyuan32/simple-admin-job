@@ -40,6 +40,5 @@ func (l *GetTaskByIdLogic) GetTaskById(in *job.IDReq) (*job.TaskInfo, error) {
 		CronExpression: result.CronExpression,
 		Pattern:        result.Pattern,
 		Payload:        result.Payload,
-		EntryId:        int64(result.EntryID),
 	}, nil
 }

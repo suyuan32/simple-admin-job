@@ -34,7 +34,6 @@ func (l *CreateTaskLogic) CreateTask(in *job.TaskInfo) (*job.BaseIDResp, error) 
 		SetCronExpression(in.CronExpression).
 		SetPattern(in.Pattern).
 		SetPayload(in.Payload).
-		SetEntryID(int(in.EntryId)).
 		Save(l.ctx)
 
 	if err != nil {

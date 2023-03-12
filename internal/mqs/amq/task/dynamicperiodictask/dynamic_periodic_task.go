@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package scheduletask
+package dynamicperiodictask
 
 import (
 	"log"
@@ -22,25 +22,29 @@ import (
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 )
 
-type SchedulerTask struct {
+type DPTask struct {
 	svcCtx *svc.ServiceContext
 }
 
-func NewSchedulerTask(svcCtx *svc.ServiceContext) *SchedulerTask {
-	return &SchedulerTask{
+func NewDPTask(svcCtx *svc.ServiceContext) *DPTask {
+	return &DPTask{
 		svcCtx: svcCtx,
 	}
 }
 
 // Start starts the server.
-func (s *SchedulerTask) Start() {
-	s.Register()
-	if err := s.svcCtx.AsynqScheduler.Run(); err != nil {
-		log.Fatal(errors.Wrapf(err, "failed to start mqtask server, error: %v", err))
+func (m *DPTask) Start() {
+	if err := m.svcCtx.AsynqPTM.Run(); err != nil {
+		log.Fatal(errors.Wrapf(err, "failed to start dptask server, error: %v", err))
 	}
 }
 
 // Stop stops the server.
-func (s *SchedulerTask) Stop() {
-	s.svcCtx.AsynqScheduler.Shutdown()
+func (m *DPTask) Stop() {
+	defer func() {
+		if recover() != nil {
+			log.Println("DPTask shuts down successfully")
+		}
+	}()
+	m.svcCtx.AsynqPTM.Shutdown()
 }

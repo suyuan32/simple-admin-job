@@ -50,6 +50,7 @@ func (l *InitDatabaseLogic) InitDatabase(in *job.Empty) (*job.BaseResp, error) {
 func (l *InitDatabaseLogic) insertTaskData() error {
 	err := l.svcCtx.DB.Task.Create().
 		SetName("hello_world").
+		SetTaskGroup("base").
 		SetCronExpression("******").
 		SetPattern(pattern.RecordHelloWorld).
 		SetPayload("{\"name\": \"Jack\"}").

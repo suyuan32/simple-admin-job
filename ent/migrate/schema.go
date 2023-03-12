@@ -20,7 +20,6 @@ var (
 		{Name: "cron_expression", Type: field.TypeString},
 		{Name: "pattern", Type: field.TypeString},
 		{Name: "payload", Type: field.TypeString},
-		{Name: "entry_id", Type: field.TypeInt},
 	}
 	// SysTasksTable holds the schema information for the "sys_tasks" table.
 	SysTasksTable = &schema.Table{
