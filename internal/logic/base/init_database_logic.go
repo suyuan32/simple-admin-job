@@ -51,9 +51,9 @@ func (l *InitDatabaseLogic) insertTaskData() error {
 	err := l.svcCtx.DB.Task.Create().
 		SetName("hello_world").
 		SetTaskGroup("base").
-		SetCronExpression("******").
+		SetCronExpression("@every 5s").
 		SetPattern(pattern.RecordHelloWorld).
-		SetPayload("{\"name\": \"Jack\"}").
+		SetPayload("{\"name\": \"Mike (DPTask 5s)\"}").
 		Exec(l.ctx)
 
 	if err != nil {

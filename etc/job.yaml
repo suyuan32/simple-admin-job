@@ -1,5 +1,5 @@
 Name: job.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:9105
 
 DatabaseConf:
   Type: mysql
@@ -28,9 +28,15 @@ Log:
 
 Prometheus:
   Host: 0.0.0.0
-  Port: 4001
+  Port: 4005
   Path: /metrics
 
 AsynqConf:
+# if you do not use WithRedisConf, you should uncomment the configuration below
+
+#  Addr: localhost:6379  # Redis address
+#  Pass: # Redis Password
+#  DB: 0 # Redis database index
+#  Concurrency: 20 # max concurrent process job task num
+#  SyncInterval: 10 # seconds, this field specifies how often sync should happen
   Enable: true
-  Location: china
