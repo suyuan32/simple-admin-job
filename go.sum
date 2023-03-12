@@ -316,8 +316,8 @@ github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o
 github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ8=
 github.com/suyuan32/simple-admin-common v0.2.7 h1:egx6bnbPCEOadWQUEtzAGMOEi96xrpsVdQo8ltBbO5I=
 github.com/suyuan32/simple-admin-common v0.2.7/go.mod h1:PrToClcinOnCwiB5QW2rXQX+i4/RdVCIN0rVLDi+Z3w=
-github.com/suyuan32/simple-admin-tools v0.2.3 h1:rrKvdkthnFQizMtH5BVSoSi7rtn2xPsEjkx9jyKvn0k=
-github.com/suyuan32/simple-admin-tools v0.2.3/go.mod h1:uukuX6o3U4PpQyT8HxRFzu/IOPuvbOSb4xYXdY3izTg=
+github.com/suyuan32/simple-admin-tools v0.2.7 h1:t65w/EA+Fba4gFVIars83yDp8O3Q3Fz56HyLWEaxx40=
+github.com/suyuan32/simple-admin-tools v0.2.7/go.mod h1:wmcRBoV+sZ0S98hdgnszwfmbjvySkA+MvU/l9RZhPdg=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
 github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415/go.mod h1:GwrjFmJcFw6At/Gs6z4yjiIwzuJ1/+UwLxMQDVQXShQ=
 github.com/xeipuuv/gojsonschema v1.2.0/go.mod h1:anYRn/JVcOK2ZgGU+IjEV4nwlhoK5sQluxsYJ78Id3Y=

@@ -2,7 +2,7 @@ module github.com/suyuan32/simple-admin-job
 
 go 1.20
 
-replace github.com/zeromicro/go-zero v1.4.4 => github.com/suyuan32/simple-admin-tools v0.2.3
+replace github.com/zeromicro/go-zero v1.4.4 => github.com/suyuan32/simple-admin-tools v0.2.7
 
 require (
 	entgo.io/ent v0.11.9
