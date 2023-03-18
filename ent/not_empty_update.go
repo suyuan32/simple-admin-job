@@ -97,3 +97,19 @@ func (t *TaskUpdateOne) SetNotEmptyPayload(value string) *TaskUpdateOne {
 	}
 	return t
 }
+
+// set field if value is not empty. e.g. string does not equal to ""
+func (tl *TaskLogUpdate) SetNotEmptyResult(value uint8) *TaskLogUpdate {
+	if value != 0 {
+		return tl.SetResult(value)
+	}
+	return tl
+}
+
+// set field if value is not empty. e.g. string does not equal to ""
+func (tl *TaskLogUpdateOne) SetNotEmptyResult(value uint8) *TaskLogUpdateOne {
+	if value != 0 {
+		return tl.SetResult(value)
+	}
+	return tl
+}

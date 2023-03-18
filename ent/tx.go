@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Task is the client for interacting with the Task builders.
 	Task *TaskClient
+	// TaskLog is the client for interacting with the TaskLog builders.
+	TaskLog *TaskLogClient
 
 	// lazily loaded.
 	client     *Client
@@ -146,6 +148,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Task = NewTaskClient(tx.config)
+	tx.TaskLog = NewTaskLogClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

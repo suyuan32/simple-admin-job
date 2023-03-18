@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 const errInvalidPage = "INVALID_PAGE"
@@ -126,6 +127,85 @@ func (t *TaskQuery) Page(
 
 	t = t.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))
 	list, err := t.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ret.List = list
+
+	return ret, nil
+}
+
+type TaskLogPager struct {
+	Order  OrderFunc
+	Filter func(*TaskLogQuery) (*TaskLogQuery, error)
+}
+
+// TaskLogPaginateOption enables pagination customization.
+type TaskLogPaginateOption func(*TaskLogPager)
+
+// DefaultTaskLogOrder is the default ordering of TaskLog.
+var DefaultTaskLogOrder = Desc(tasklog.FieldID)
+
+func newTaskLogPager(opts []TaskLogPaginateOption) (*TaskLogPager, error) {
+	pager := &TaskLogPager{}
+	for _, opt := range opts {
+		opt(pager)
+	}
+	if pager.Order == nil {
+		pager.Order = DefaultTaskLogOrder
+	}
+	return pager, nil
+}
+
+func (p *TaskLogPager) ApplyFilter(query *TaskLogQuery) (*TaskLogQuery, error) {
+	if p.Filter != nil {
+		return p.Filter(query)
+	}
+	return query, nil
+}
+
+// TaskLogPageList is TaskLog PageList result.
+type TaskLogPageList struct {
+	List        []*TaskLog   `json:"list"`
+	PageDetails *PageDetails `json:"pageDetails"`
+}
+
+func (tl *TaskLogQuery) Page(
+	ctx context.Context, pageNum uint64, pageSize uint64, opts ...TaskLogPaginateOption,
+) (*TaskLogPageList, error) {
+
+	pager, err := newTaskLogPager(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	if tl, err = pager.ApplyFilter(tl); err != nil {
+		return nil, err
+	}
+
+	ret := &TaskLogPageList{}
+
+	ret.PageDetails = &PageDetails{
+		Page: pageNum,
+		Size: pageSize,
+	}
+
+	count, err := tl.Clone().Count(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ret.PageDetails.Total = uint64(count)
+
+	if pager.Order != nil {
+		tl = tl.Order(pager.Order)
+	} else {
+		tl = tl.Order(DefaultTaskLogOrder)
+	}
+
+	tl = tl.Offset(int((pageNum - 1) * pageSize)).Limit(int(pageSize))
+	list, err := tl.All(ctx)
 	if err != nil {
 		return nil, err
 	}

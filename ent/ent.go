@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -65,7 +66,8 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		task.Table: task.ValidColumn,
+		task.Table:    task.ValidColumn,
+		tasklog.Table: tasklog.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

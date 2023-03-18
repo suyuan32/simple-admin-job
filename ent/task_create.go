@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 // TaskCreate is the builder for creating a Task entity.
@@ -96,6 +97,21 @@ func (tc *TaskCreate) SetPayload(s string) *TaskCreate {
 func (tc *TaskCreate) SetID(u uint64) *TaskCreate {
 	tc.mutation.SetID(u)
 	return tc
+}
+
+// AddTaskLogIDs adds the "task_logs" edge to the TaskLog entity by IDs.
+func (tc *TaskCreate) AddTaskLogIDs(ids ...uint64) *TaskCreate {
+	tc.mutation.AddTaskLogIDs(ids...)
+	return tc
+}
+
+// AddTaskLogs adds the "task_logs" edges to the TaskLog entity.
+func (tc *TaskCreate) AddTaskLogs(t ...*TaskLog) *TaskCreate {
+	ids := make([]uint64, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tc.AddTaskLogIDs(ids...)
 }
 
 // Mutation returns the TaskMutation object of the builder.
@@ -233,6 +249,25 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
 		_node.Payload = value
+	}
+	if nodes := tc.mutation.TaskLogsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

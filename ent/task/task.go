@@ -27,8 +27,17 @@ const (
 	FieldPattern = "pattern"
 	// FieldPayload holds the string denoting the payload field in the database.
 	FieldPayload = "payload"
+	// EdgeTaskLogs holds the string denoting the task_logs edge name in mutations.
+	EdgeTaskLogs = "task_logs"
 	// Table holds the table name of the task in the database.
 	Table = "sys_tasks"
+	// TaskLogsTable is the table that holds the task_logs relation/edge.
+	TaskLogsTable = "sys_task_logs"
+	// TaskLogsInverseTable is the table name for the TaskLog entity.
+	// It exists in this package in order to avoid circular dependency with the "tasklog" package.
+	TaskLogsInverseTable = "sys_task_logs"
+	// TaskLogsColumn is the table column denoting the task_logs relation/edge.
+	TaskLogsColumn = "task_task_logs"
 )
 
 // Columns holds all SQL columns for task fields.

@@ -32,6 +32,27 @@ type Task struct {
 	Pattern string `json:"pattern,omitempty"`
 	// The data used in cron (JSON string) | 任务需要的数据(JSON 字符串)
 	Payload string `json:"payload,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the TaskQuery when eager-loading is set.
+	Edges TaskEdges `json:"edges"`
+}
+
+// TaskEdges holds the relations/edges for other nodes in the graph.
+type TaskEdges struct {
+	// TaskLogs holds the value of the task_logs edge.
+	TaskLogs []*TaskLog `json:"task_logs,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// TaskLogsOrErr returns the TaskLogs value or an error if the edge
+// was not loaded in eager-loading.
+func (e TaskEdges) TaskLogsOrErr() ([]*TaskLog, error) {
+	if e.loadedTypes[0] {
+		return e.TaskLogs, nil
+	}
+	return nil, &NotLoadedError{edge: "task_logs"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -117,6 +138,11 @@ func (t *Task) assignValues(columns []string, values []any) error {
 		}
 	}
 	return nil
+}
+
+// QueryTaskLogs queries the "task_logs" edge of the Task entity.
+func (t *Task) QueryTaskLogs() *TaskLogQuery {
+	return NewTaskClient(t.config).QueryTaskLogs(t)
 }
 
 // Update returns a builder for updating this Task.

@@ -7,6 +7,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-job/ent/schema"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -34,4 +35,10 @@ func init() {
 	taskDescStatus := taskMixinFields1[0].Descriptor()
 	// task.DefaultStatus holds the default value on creation for the status field.
 	task.DefaultStatus = taskDescStatus.Default.(uint8)
+	tasklogFields := schema.TaskLog{}.Fields()
+	_ = tasklogFields
+	// tasklogDescStartedAt is the schema descriptor for started_at field.
+	tasklogDescStartedAt := tasklogFields[1].Descriptor()
+	// tasklog.DefaultStartedAt holds the default value on creation for the started_at field.
+	tasklog.DefaultStartedAt = tasklogDescStartedAt.Default.(func() time.Time)
 }

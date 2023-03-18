@@ -35,6 +35,17 @@ type JobClient interface {
 	GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error)
 	// group: task
 	DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
+	// TaskLog management
+	// group: tasklog
+	CreateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseIDResp, error)
+	// group: tasklog
+	UpdateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseResp, error)
+	// group: tasklog
+	GetTaskLogList(ctx context.Context, in *TaskLogListReq, opts ...grpc.CallOption) (*TaskLogListResp, error)
+	// group: tasklog
+	GetTaskLogById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskLogInfo, error)
+	// group: tasklog
+	DeleteTaskLog(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
 }
 
 type jobClient struct {
@@ -99,6 +110,51 @@ func (c *jobClient) DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *jobClient) CreateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	out := new(BaseIDResp)
+	err := c.cc.Invoke(ctx, "/job.Job/createTaskLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) UpdateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseResp, error) {
+	out := new(BaseResp)
+	err := c.cc.Invoke(ctx, "/job.Job/updateTaskLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) GetTaskLogList(ctx context.Context, in *TaskLogListReq, opts ...grpc.CallOption) (*TaskLogListResp, error) {
+	out := new(TaskLogListResp)
+	err := c.cc.Invoke(ctx, "/job.Job/getTaskLogList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) GetTaskLogById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskLogInfo, error) {
+	out := new(TaskLogInfo)
+	err := c.cc.Invoke(ctx, "/job.Job/getTaskLogById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) DeleteTaskLog(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error) {
+	out := new(BaseResp)
+	err := c.cc.Invoke(ctx, "/job.Job/deleteTaskLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServer is the server API for Job service.
 // All implementations must embed UnimplementedJobServer
 // for forward compatibility
@@ -116,6 +172,17 @@ type JobServer interface {
 	GetTaskById(context.Context, *IDReq) (*TaskInfo, error)
 	// group: task
 	DeleteTask(context.Context, *IDsReq) (*BaseResp, error)
+	// TaskLog management
+	// group: tasklog
+	CreateTaskLog(context.Context, *TaskLogInfo) (*BaseIDResp, error)
+	// group: tasklog
+	UpdateTaskLog(context.Context, *TaskLogInfo) (*BaseResp, error)
+	// group: tasklog
+	GetTaskLogList(context.Context, *TaskLogListReq) (*TaskLogListResp, error)
+	// group: tasklog
+	GetTaskLogById(context.Context, *IDReq) (*TaskLogInfo, error)
+	// group: tasklog
+	DeleteTaskLog(context.Context, *IDsReq) (*BaseResp, error)
 	mustEmbedUnimplementedJobServer()
 }
 
@@ -140,6 +207,21 @@ func (UnimplementedJobServer) GetTaskById(context.Context, *IDReq) (*TaskInfo, e
 }
 func (UnimplementedJobServer) DeleteTask(context.Context, *IDsReq) (*BaseResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTask not implemented")
+}
+func (UnimplementedJobServer) CreateTaskLog(context.Context, *TaskLogInfo) (*BaseIDResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTaskLog not implemented")
+}
+func (UnimplementedJobServer) UpdateTaskLog(context.Context, *TaskLogInfo) (*BaseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTaskLog not implemented")
+}
+func (UnimplementedJobServer) GetTaskLogList(context.Context, *TaskLogListReq) (*TaskLogListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTaskLogList not implemented")
+}
+func (UnimplementedJobServer) GetTaskLogById(context.Context, *IDReq) (*TaskLogInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTaskLogById not implemented")
+}
+func (UnimplementedJobServer) DeleteTaskLog(context.Context, *IDsReq) (*BaseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTaskLog not implemented")
 }
 func (UnimplementedJobServer) mustEmbedUnimplementedJobServer() {}
 
@@ -262,6 +344,96 @@ func _Job_DeleteTask_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Job_CreateTaskLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskLogInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).CreateTaskLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/createTaskLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).CreateTaskLog(ctx, req.(*TaskLogInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_UpdateTaskLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskLogInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).UpdateTaskLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/updateTaskLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).UpdateTaskLog(ctx, req.(*TaskLogInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_GetTaskLogList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TaskLogListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).GetTaskLogList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/getTaskLogList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).GetTaskLogList(ctx, req.(*TaskLogListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_GetTaskLogById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).GetTaskLogById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/getTaskLogById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).GetTaskLogById(ctx, req.(*IDReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_DeleteTaskLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IDsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).DeleteTaskLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job.Job/deleteTaskLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).DeleteTaskLog(ctx, req.(*IDsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Job_ServiceDesc is the grpc.ServiceDesc for Job service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -292,6 +464,26 @@ var Job_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "deleteTask",
 			Handler:    _Job_DeleteTask_Handler,
+		},
+		{
+			MethodName: "createTaskLog",
+			Handler:    _Job_CreateTaskLog_Handler,
+		},
+		{
+			MethodName: "updateTaskLog",
+			Handler:    _Job_UpdateTaskLog_Handler,
+		},
+		{
+			MethodName: "getTaskLogList",
+			Handler:    _Job_GetTaskLogList_Handler,
+		},
+		{
+			MethodName: "getTaskLogById",
+			Handler:    _Job_GetTaskLogById_Handler,
+		},
+		{
+			MethodName: "deleteTaskLog",
+			Handler:    _Job_DeleteTaskLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

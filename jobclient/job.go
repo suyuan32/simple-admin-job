@@ -13,18 +13,21 @@ import (
 )
 
 type (
-	BaseIDResp   = job.BaseIDResp
-	BaseResp     = job.BaseResp
-	BaseUUIDResp = job.BaseUUIDResp
-	Empty        = job.Empty
-	IDReq        = job.IDReq
-	IDsReq       = job.IDsReq
-	PageInfoReq  = job.PageInfoReq
-	TaskInfo     = job.TaskInfo
-	TaskListReq  = job.TaskListReq
-	TaskListResp = job.TaskListResp
-	UUIDReq      = job.UUIDReq
-	UUIDsReq     = job.UUIDsReq
+	BaseIDResp      = job.BaseIDResp
+	BaseResp        = job.BaseResp
+	BaseUUIDResp    = job.BaseUUIDResp
+	Empty           = job.Empty
+	IDReq           = job.IDReq
+	IDsReq          = job.IDsReq
+	PageInfoReq     = job.PageInfoReq
+	TaskInfo        = job.TaskInfo
+	TaskListReq     = job.TaskListReq
+	TaskListResp    = job.TaskListResp
+	TaskLogInfo     = job.TaskLogInfo
+	TaskLogListReq  = job.TaskLogListReq
+	TaskLogListResp = job.TaskLogListResp
+	UUIDReq         = job.UUIDReq
+	UUIDsReq        = job.UUIDsReq
 
 	Job interface {
 		InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error)
@@ -34,6 +37,12 @@ type (
 		GetTaskList(ctx context.Context, in *TaskListReq, opts ...grpc.CallOption) (*TaskListResp, error)
 		GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskInfo, error)
 		DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
+		// TaskLog management
+		CreateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseIDResp, error)
+		UpdateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseResp, error)
+		GetTaskLogList(ctx context.Context, in *TaskLogListReq, opts ...grpc.CallOption) (*TaskLogListResp, error)
+		GetTaskLogById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskLogInfo, error)
+		DeleteTaskLog(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error)
 	}
 
 	defaultJob struct {
@@ -76,4 +85,30 @@ func (m *defaultJob) GetTaskById(ctx context.Context, in *IDReq, opts ...grpc.Ca
 func (m *defaultJob) DeleteTask(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error) {
 	client := job.NewJobClient(m.cli.Conn())
 	return client.DeleteTask(ctx, in, opts...)
+}
+
+// TaskLog management
+func (m *defaultJob) CreateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseIDResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.CreateTaskLog(ctx, in, opts...)
+}
+
+func (m *defaultJob) UpdateTaskLog(ctx context.Context, in *TaskLogInfo, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.UpdateTaskLog(ctx, in, opts...)
+}
+
+func (m *defaultJob) GetTaskLogList(ctx context.Context, in *TaskLogListReq, opts ...grpc.CallOption) (*TaskLogListResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.GetTaskLogList(ctx, in, opts...)
+}
+
+func (m *defaultJob) GetTaskLogById(ctx context.Context, in *IDReq, opts ...grpc.CallOption) (*TaskLogInfo, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.GetTaskLogById(ctx, in, opts...)
+}
+
+func (m *defaultJob) DeleteTaskLog(ctx context.Context, in *IDsReq, opts ...grpc.CallOption) (*BaseResp, error) {
+	client := job.NewJobClient(m.cli.Conn())
+	return client.DeleteTaskLog(ctx, in, opts...)
 }
