@@ -26,6 +26,13 @@ var (
 		Name:       "sys_tasks",
 		Columns:    SysTasksColumns,
 		PrimaryKey: []*schema.Column{SysTasksColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "task_pattern",
+				Unique:  true,
+				Columns: []*schema.Column{SysTasksColumns[7]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{

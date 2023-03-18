@@ -2,6 +2,7 @@ package base
 
 import (
 	"context"
+	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
 
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/suyuan32/simple-admin-common/enum/errorcode"
@@ -37,7 +38,16 @@ func (l *InitDatabaseLogic) InitDatabase(in *job.Empty) (*job.BaseResp, error) {
 		return nil, errorx.NewCodeError(errorcode.Internal, err.Error())
 	}
 
-	err := l.insertTaskData()
+	count, err := l.svcCtx.DB.Task.Query().Count(l.ctx)
+	if err != nil {
+		return nil, dberrorhandler.DefaultEntError(l.Logger, err, "database error")
+	}
+
+	if count != 0 {
+		return nil, errorx.NewInvalidArgumentError(i18n.AlreadyInit)
+	}
+
+	err = l.insertTaskData()
 	if err != nil {
 		return nil, err
 	}

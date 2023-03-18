@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/suyuan32/simple-admin-common/orm/ent/mixins"
 )
 
@@ -34,6 +35,12 @@ func (Task) Mixin() []ent.Mixin {
 // Edges of the Task.
 func (Task) Edges() []ent.Edge {
 	return nil
+}
+
+func (Task) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("pattern").Unique(),
+	}
 }
 
 func (Task) Annotations() []schema.Annotation {
