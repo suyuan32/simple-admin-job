@@ -16,14 +16,13 @@ package periodicconfig
 
 import (
 	"context"
+	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/hibiken/asynq"
 	"github.com/suyuan32/simple-admin-common/enum/common"
-	"github.com/zeromicro/go-zero/core/logx"
-
 	"github.com/suyuan32/simple-admin-job/ent"
 	"github.com/suyuan32/simple-admin-job/ent/task"
-	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
 )
 
 type EntConfigProvider struct {
@@ -39,7 +38,10 @@ func NewEntConfigProvider(db *ent.Client) *EntConfigProvider {
 func (e *EntConfigProvider) GetConfigs() ([]*asynq.PeriodicTaskConfig, error) {
 	configData, err := e.DB.Task.Query().Where(task.StatusEQ(common.StatusNormal)).All(context.Background())
 	if err != nil {
-		return nil, dberrorhandler.DefaultEntError(logx.WithContext(context.Background()), err, "get task config error")
+		fmt.Printf("database error: %s, make sure the database configuration is correct and database has been initialized \n", err.Error())
+		logx.Errorw("database error", logx.Field("detail", err.Error()),
+			logx.Field("recommend", "you maybe need to  initialize the database"))
+		return nil, nil
 	}
 
 	var result []*asynq.PeriodicTaskConfig

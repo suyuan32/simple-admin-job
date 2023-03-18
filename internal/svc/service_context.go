@@ -43,7 +43,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:         c,
 		DB:             db,
-		AsynqServer:    c.AsynqConf.NewServer(),
+		AsynqServer:    c.AsynqConf.WithRedisConf(c.RedisConf).NewServer(),
 		AsynqScheduler: c.AsynqConf.NewScheduler(),
 		AsynqPTM:       c.AsynqConf.NewPeriodicTaskManager(periodicconfig.NewEntConfigProvider(db)),
 		Redis:          redis.MustNewRedis(c.RedisConf),
