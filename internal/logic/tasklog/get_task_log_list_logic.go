@@ -2,6 +2,8 @@ package tasklog
 
 import (
 	"context"
+	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 
 	"github.com/suyuan32/simple-admin-job/ent/predicate"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
@@ -27,6 +29,10 @@ func NewGetTaskLogListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetTaskLogListLogic) GetTaskLogList(in *job.TaskLogListReq) (*job.TaskLogListResp, error) {
 	var predicates []predicate.TaskLog
+	if in.TaskId != 0 {
+		predicates = append(predicates, tasklog.HasTasksWith(task.IDEQ(in.TaskId)))
+	}
+
 	result, err := l.svcCtx.DB.TaskLog.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize)
 
 	if err != nil {

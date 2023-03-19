@@ -17,6 +17,7 @@ message TaskLogListResp {
 message TaskLogListReq {
   uint64 page = 1;
   uint64 page_size = 2;
+  uint64 task_id = 3;
 }
 
 
