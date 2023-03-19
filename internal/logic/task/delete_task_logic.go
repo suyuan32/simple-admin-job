@@ -2,6 +2,9 @@ package task
 
 import (
 	"context"
+	"github.com/suyuan32/simple-admin-job/ent"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
+	"github.com/suyuan32/simple-admin-job/internal/utils/entx"
 
 	"github.com/suyuan32/simple-admin-job/ent/task"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
@@ -27,7 +30,18 @@ func NewDeleteTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteTaskLogic) DeleteTask(in *job.IDsReq) (*job.BaseResp, error) {
-	_, err := l.svcCtx.DB.Task.Delete().Where(task.IDIn(in.Ids...)).Exec(l.ctx)
+	err := entx.WithTx(l.ctx, l.svcCtx.DB, func(tx *ent.Tx) error {
+		_, err := tx.TaskLog.Delete().Where(tasklog.HasTasksWith(task.IDIn(in.Ids...))).Exec(l.ctx)
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.Task.Delete().Where(task.IDIn(in.Ids...)).Exec(l.ctx)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)

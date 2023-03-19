@@ -34,14 +34,41 @@ var (
 			},
 		},
 	}
+	// SysTaskLogsColumns holds the columns for the "sys_task_logs" table.
+	SysTaskLogsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUint64, Increment: true},
+		{Name: "started_at", Type: field.TypeTime},
+		{Name: "finished_at", Type: field.TypeTime},
+		{Name: "result", Type: field.TypeUint8},
+		{Name: "task_task_logs", Type: field.TypeUint64, Nullable: true},
+	}
+	// SysTaskLogsTable holds the schema information for the "sys_task_logs" table.
+	SysTaskLogsTable = &schema.Table{
+		Name:       "sys_task_logs",
+		Columns:    SysTaskLogsColumns,
+		PrimaryKey: []*schema.Column{SysTaskLogsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_task_logs_sys_tasks_task_logs",
+				Columns:    []*schema.Column{SysTaskLogsColumns[4]},
+				RefColumns: []*schema.Column{SysTasksColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		SysTasksTable,
+		SysTaskLogsTable,
 	}
 )
 
 func init() {
 	SysTasksTable.Annotation = &entsql.Annotation{
 		Table: "sys_tasks",
+	}
+	SysTaskLogsTable.ForeignKeys[0].RefTable = SysTasksTable
+	SysTaskLogsTable.Annotation = &entsql.Annotation{
+		Table: "sys_task_logs",
 	}
 }

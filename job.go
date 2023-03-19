@@ -62,8 +62,13 @@ func main() {
 	}()
 
 	serviceGroup.Add(mqtask.NewMQTask(ctx))
-	serviceGroup.Add(dynamicperiodictask.NewDPTask(ctx))
-	serviceGroup.Add(scheduletask.NewSchedulerTask(ctx))
+	if c.TaskConf.EnableDPTask {
+		serviceGroup.Add(dynamicperiodictask.NewDPTask(ctx))
+	}
+
+	if c.TaskConf.EnableScheduledTask {
+		serviceGroup.Add(scheduletask.NewSchedulerTask(ctx))
+	}
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	serviceGroup.Start()

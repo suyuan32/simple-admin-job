@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -12,15 +13,17 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/suyuan32/simple-admin-job/ent/predicate"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 // TaskQuery is the builder for querying Task entities.
 type TaskQuery struct {
 	config
-	ctx        *QueryContext
-	order      []OrderFunc
-	inters     []Interceptor
-	predicates []predicate.Task
+	ctx          *QueryContext
+	order        []OrderFunc
+	inters       []Interceptor
+	predicates   []predicate.Task
+	withTaskLogs *TaskLogQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -55,6 +58,28 @@ func (tq *TaskQuery) Unique(unique bool) *TaskQuery {
 func (tq *TaskQuery) Order(o ...OrderFunc) *TaskQuery {
 	tq.order = append(tq.order, o...)
 	return tq
+}
+
+// QueryTaskLogs chains the current query on the "task_logs" edge.
+func (tq *TaskQuery) QueryTaskLogs() *TaskLogQuery {
+	query := (&TaskLogClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(task.Table, task.FieldID, selector),
+			sqlgraph.To(tasklog.Table, tasklog.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, task.TaskLogsTable, task.TaskLogsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Task entity from the query.
@@ -244,15 +269,27 @@ func (tq *TaskQuery) Clone() *TaskQuery {
 		return nil
 	}
 	return &TaskQuery{
-		config:     tq.config,
-		ctx:        tq.ctx.Clone(),
-		order:      append([]OrderFunc{}, tq.order...),
-		inters:     append([]Interceptor{}, tq.inters...),
-		predicates: append([]predicate.Task{}, tq.predicates...),
+		config:       tq.config,
+		ctx:          tq.ctx.Clone(),
+		order:        append([]OrderFunc{}, tq.order...),
+		inters:       append([]Interceptor{}, tq.inters...),
+		predicates:   append([]predicate.Task{}, tq.predicates...),
+		withTaskLogs: tq.withTaskLogs.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
+}
+
+// WithTaskLogs tells the query-builder to eager-load the nodes that are connected to
+// the "task_logs" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TaskQuery) WithTaskLogs(opts ...func(*TaskLogQuery)) *TaskQuery {
+	query := (&TaskLogClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withTaskLogs = query
+	return tq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -331,8 +368,11 @@ func (tq *TaskQuery) prepareQuery(ctx context.Context) error {
 
 func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, error) {
 	var (
-		nodes = []*Task{}
-		_spec = tq.querySpec()
+		nodes       = []*Task{}
+		_spec       = tq.querySpec()
+		loadedTypes = [1]bool{
+			tq.withTaskLogs != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Task).scanValues(nil, columns)
@@ -340,6 +380,7 @@ func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, e
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Task{config: tq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -351,7 +392,46 @@ func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := tq.withTaskLogs; query != nil {
+		if err := tq.loadTaskLogs(ctx, query, nodes,
+			func(n *Task) { n.Edges.TaskLogs = []*TaskLog{} },
+			func(n *Task, e *TaskLog) { n.Edges.TaskLogs = append(n.Edges.TaskLogs, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (tq *TaskQuery) loadTaskLogs(ctx context.Context, query *TaskLogQuery, nodes []*Task, init func(*Task), assign func(*Task, *TaskLog)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uint64]*Task)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.TaskLog(func(s *sql.Selector) {
+		s.Where(sql.InValues(task.TaskLogsColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.task_task_logs
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "task_task_logs" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "task_task_logs" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (tq *TaskQuery) sqlCount(ctx context.Context) (int, error) {

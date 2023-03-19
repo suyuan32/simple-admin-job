@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+// TaskLog message
+
+message TaskLogInfo {
+  uint64 id = 1;
+  int64  started_at = 4;
+  int64  finished_at = 5;
+  uint32 result = 6;
+}
+
+message TaskLogListResp {
+  uint64 total = 1;
+  repeated TaskLogInfo data = 2;
+}
+
+message TaskLogListReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  uint64 task_id = 3;
+  uint32 result = 4;
+}
+
+
+service Job {
+
+  // TaskLog management
+  // group: tasklog
+  rpc createTaskLog (TaskLogInfo) returns (BaseIDResp);
+  // group: tasklog
+  rpc updateTaskLog (TaskLogInfo) returns (BaseResp);
+  // group: tasklog
+  rpc getTaskLogList (TaskLogListReq) returns (TaskLogListResp);
+  // group: tasklog
+  rpc getTaskLogById (IDReq) returns (TaskLogInfo);
+  // group: tasklog
+  rpc deleteTaskLog (IDsReq) returns (BaseResp);
+
+
+}

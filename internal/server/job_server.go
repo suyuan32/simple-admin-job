@@ -8,6 +8,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-job/internal/logic/base"
 	"github.com/suyuan32/simple-admin-job/internal/logic/task"
+	"github.com/suyuan32/simple-admin-job/internal/logic/tasklog"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 	"github.com/suyuan32/simple-admin-job/job"
 )
@@ -52,4 +53,30 @@ func (s *JobServer) GetTaskById(ctx context.Context, in *job.IDReq) (*job.TaskIn
 func (s *JobServer) DeleteTask(ctx context.Context, in *job.IDsReq) (*job.BaseResp, error) {
 	l := task.NewDeleteTaskLogic(ctx, s.svcCtx)
 	return l.DeleteTask(in)
+}
+
+// TaskLog management
+func (s *JobServer) CreateTaskLog(ctx context.Context, in *job.TaskLogInfo) (*job.BaseIDResp, error) {
+	l := tasklog.NewCreateTaskLogLogic(ctx, s.svcCtx)
+	return l.CreateTaskLog(in)
+}
+
+func (s *JobServer) UpdateTaskLog(ctx context.Context, in *job.TaskLogInfo) (*job.BaseResp, error) {
+	l := tasklog.NewUpdateTaskLogLogic(ctx, s.svcCtx)
+	return l.UpdateTaskLog(in)
+}
+
+func (s *JobServer) GetTaskLogList(ctx context.Context, in *job.TaskLogListReq) (*job.TaskLogListResp, error) {
+	l := tasklog.NewGetTaskLogListLogic(ctx, s.svcCtx)
+	return l.GetTaskLogList(in)
+}
+
+func (s *JobServer) GetTaskLogById(ctx context.Context, in *job.IDReq) (*job.TaskLogInfo, error) {
+	l := tasklog.NewGetTaskLogByIdLogic(ctx, s.svcCtx)
+	return l.GetTaskLogById(in)
+}
+
+func (s *JobServer) DeleteTaskLog(ctx context.Context, in *job.IDsReq) (*job.BaseResp, error) {
+	l := tasklog.NewDeleteTaskLogLogic(ctx, s.svcCtx)
+	return l.DeleteTaskLog(in)
 }

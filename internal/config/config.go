@@ -13,4 +13,10 @@ type Config struct {
 	DatabaseConf config.DatabaseConf
 	RedisConf    redis.RedisConf
 	AsynqConf    asynq.AsynqConf
+	TaskConf     TaskConf
+}
+
+type TaskConf struct {
+	EnableScheduledTask bool `json:",default=true"`
+	EnableDPTask        bool `json:",default=true"`
 }

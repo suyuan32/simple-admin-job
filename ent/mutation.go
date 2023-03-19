@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/suyuan32/simple-admin-job/ent/predicate"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 const (
@@ -24,28 +25,32 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeTask = "Task"
+	TypeTask    = "Task"
+	TypeTaskLog = "TaskLog"
 )
 
 // TaskMutation represents an operation that mutates the Task nodes in the graph.
 type TaskMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *uint64
-	created_at      *time.Time
-	updated_at      *time.Time
-	status          *uint8
-	addstatus       *int8
-	name            *string
-	task_group      *string
-	cron_expression *string
-	pattern         *string
-	payload         *string
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*Task, error)
-	predicates      []predicate.Task
+	op               Op
+	typ              string
+	id               *uint64
+	created_at       *time.Time
+	updated_at       *time.Time
+	status           *uint8
+	addstatus        *int8
+	name             *string
+	task_group       *string
+	cron_expression  *string
+	pattern          *string
+	payload          *string
+	clearedFields    map[string]struct{}
+	task_logs        map[uint64]struct{}
+	removedtask_logs map[uint64]struct{}
+	clearedtask_logs bool
+	done             bool
+	oldValue         func(context.Context) (*Task, error)
+	predicates       []predicate.Task
 }
 
 var _ ent.Mutation = (*TaskMutation)(nil)
@@ -474,6 +479,60 @@ func (m *TaskMutation) ResetPayload() {
 	m.payload = nil
 }
 
+// AddTaskLogIDs adds the "task_logs" edge to the TaskLog entity by ids.
+func (m *TaskMutation) AddTaskLogIDs(ids ...uint64) {
+	if m.task_logs == nil {
+		m.task_logs = make(map[uint64]struct{})
+	}
+	for i := range ids {
+		m.task_logs[ids[i]] = struct{}{}
+	}
+}
+
+// ClearTaskLogs clears the "task_logs" edge to the TaskLog entity.
+func (m *TaskMutation) ClearTaskLogs() {
+	m.clearedtask_logs = true
+}
+
+// TaskLogsCleared reports if the "task_logs" edge to the TaskLog entity was cleared.
+func (m *TaskMutation) TaskLogsCleared() bool {
+	return m.clearedtask_logs
+}
+
+// RemoveTaskLogIDs removes the "task_logs" edge to the TaskLog entity by IDs.
+func (m *TaskMutation) RemoveTaskLogIDs(ids ...uint64) {
+	if m.removedtask_logs == nil {
+		m.removedtask_logs = make(map[uint64]struct{})
+	}
+	for i := range ids {
+		delete(m.task_logs, ids[i])
+		m.removedtask_logs[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedTaskLogs returns the removed IDs of the "task_logs" edge to the TaskLog entity.
+func (m *TaskMutation) RemovedTaskLogsIDs() (ids []uint64) {
+	for id := range m.removedtask_logs {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// TaskLogsIDs returns the "task_logs" edge IDs in the mutation.
+func (m *TaskMutation) TaskLogsIDs() (ids []uint64) {
+	for id := range m.task_logs {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetTaskLogs resets all changes to the "task_logs" edge.
+func (m *TaskMutation) ResetTaskLogs() {
+	m.task_logs = nil
+	m.clearedtask_logs = false
+	m.removedtask_logs = nil
+}
+
 // Where appends a list predicates to the TaskMutation builder.
 func (m *TaskMutation) Where(ps ...predicate.Task) {
 	m.predicates = append(m.predicates, ps...)
@@ -750,48 +809,627 @@ func (m *TaskMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *TaskMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.task_logs != nil {
+		edges = append(edges, task.EdgeTaskLogs)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *TaskMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case task.EdgeTaskLogs:
+		ids := make([]ent.Value, 0, len(m.task_logs))
+		for id := range m.task_logs {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *TaskMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedtask_logs != nil {
+		edges = append(edges, task.EdgeTaskLogs)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *TaskMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case task.EdgeTaskLogs:
+		ids := make([]ent.Value, 0, len(m.removedtask_logs))
+		for id := range m.removedtask_logs {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *TaskMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedtask_logs {
+		edges = append(edges, task.EdgeTaskLogs)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *TaskMutation) EdgeCleared(name string) bool {
+	switch name {
+	case task.EdgeTaskLogs:
+		return m.clearedtask_logs
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *TaskMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown Task unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *TaskMutation) ResetEdge(name string) error {
+	switch name {
+	case task.EdgeTaskLogs:
+		m.ResetTaskLogs()
+		return nil
+	}
 	return fmt.Errorf("unknown Task edge %s", name)
+}
+
+// TaskLogMutation represents an operation that mutates the TaskLog nodes in the graph.
+type TaskLogMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uint64
+	started_at    *time.Time
+	finished_at   *time.Time
+	result        *uint8
+	addresult     *int8
+	clearedFields map[string]struct{}
+	tasks         *uint64
+	clearedtasks  bool
+	done          bool
+	oldValue      func(context.Context) (*TaskLog, error)
+	predicates    []predicate.TaskLog
+}
+
+var _ ent.Mutation = (*TaskLogMutation)(nil)
+
+// tasklogOption allows management of the mutation configuration using functional options.
+type tasklogOption func(*TaskLogMutation)
+
+// newTaskLogMutation creates new mutation for the TaskLog entity.
+func newTaskLogMutation(c config, op Op, opts ...tasklogOption) *TaskLogMutation {
+	m := &TaskLogMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTaskLog,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTaskLogID sets the ID field of the mutation.
+func withTaskLogID(id uint64) tasklogOption {
+	return func(m *TaskLogMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *TaskLog
+		)
+		m.oldValue = func(ctx context.Context) (*TaskLog, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().TaskLog.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTaskLog sets the old TaskLog of the mutation.
+func withTaskLog(node *TaskLog) tasklogOption {
+	return func(m *TaskLogMutation) {
+		m.oldValue = func(context.Context) (*TaskLog, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TaskLogMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TaskLogMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of TaskLog entities.
+func (m *TaskLogMutation) SetID(id uint64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *TaskLogMutation) ID() (id uint64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *TaskLogMutation) IDs(ctx context.Context) ([]uint64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uint64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().TaskLog.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetStartedAt sets the "started_at" field.
+func (m *TaskLogMutation) SetStartedAt(t time.Time) {
+	m.started_at = &t
+}
+
+// StartedAt returns the value of the "started_at" field in the mutation.
+func (m *TaskLogMutation) StartedAt() (r time.Time, exists bool) {
+	v := m.started_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStartedAt returns the old "started_at" field's value of the TaskLog entity.
+// If the TaskLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TaskLogMutation) OldStartedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStartedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStartedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStartedAt: %w", err)
+	}
+	return oldValue.StartedAt, nil
+}
+
+// ResetStartedAt resets all changes to the "started_at" field.
+func (m *TaskLogMutation) ResetStartedAt() {
+	m.started_at = nil
+}
+
+// SetFinishedAt sets the "finished_at" field.
+func (m *TaskLogMutation) SetFinishedAt(t time.Time) {
+	m.finished_at = &t
+}
+
+// FinishedAt returns the value of the "finished_at" field in the mutation.
+func (m *TaskLogMutation) FinishedAt() (r time.Time, exists bool) {
+	v := m.finished_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFinishedAt returns the old "finished_at" field's value of the TaskLog entity.
+// If the TaskLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TaskLogMutation) OldFinishedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFinishedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFinishedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFinishedAt: %w", err)
+	}
+	return oldValue.FinishedAt, nil
+}
+
+// ResetFinishedAt resets all changes to the "finished_at" field.
+func (m *TaskLogMutation) ResetFinishedAt() {
+	m.finished_at = nil
+}
+
+// SetResult sets the "result" field.
+func (m *TaskLogMutation) SetResult(u uint8) {
+	m.result = &u
+	m.addresult = nil
+}
+
+// Result returns the value of the "result" field in the mutation.
+func (m *TaskLogMutation) Result() (r uint8, exists bool) {
+	v := m.result
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResult returns the old "result" field's value of the TaskLog entity.
+// If the TaskLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TaskLogMutation) OldResult(ctx context.Context) (v uint8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldResult is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldResult requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResult: %w", err)
+	}
+	return oldValue.Result, nil
+}
+
+// AddResult adds u to the "result" field.
+func (m *TaskLogMutation) AddResult(u int8) {
+	if m.addresult != nil {
+		*m.addresult += u
+	} else {
+		m.addresult = &u
+	}
+}
+
+// AddedResult returns the value that was added to the "result" field in this mutation.
+func (m *TaskLogMutation) AddedResult() (r int8, exists bool) {
+	v := m.addresult
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetResult resets all changes to the "result" field.
+func (m *TaskLogMutation) ResetResult() {
+	m.result = nil
+	m.addresult = nil
+}
+
+// SetTasksID sets the "tasks" edge to the Task entity by id.
+func (m *TaskLogMutation) SetTasksID(id uint64) {
+	m.tasks = &id
+}
+
+// ClearTasks clears the "tasks" edge to the Task entity.
+func (m *TaskLogMutation) ClearTasks() {
+	m.clearedtasks = true
+}
+
+// TasksCleared reports if the "tasks" edge to the Task entity was cleared.
+func (m *TaskLogMutation) TasksCleared() bool {
+	return m.clearedtasks
+}
+
+// TasksID returns the "tasks" edge ID in the mutation.
+func (m *TaskLogMutation) TasksID() (id uint64, exists bool) {
+	if m.tasks != nil {
+		return *m.tasks, true
+	}
+	return
+}
+
+// TasksIDs returns the "tasks" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// TasksID instead. It exists only for internal usage by the builders.
+func (m *TaskLogMutation) TasksIDs() (ids []uint64) {
+	if id := m.tasks; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetTasks resets all changes to the "tasks" edge.
+func (m *TaskLogMutation) ResetTasks() {
+	m.tasks = nil
+	m.clearedtasks = false
+}
+
+// Where appends a list predicates to the TaskLogMutation builder.
+func (m *TaskLogMutation) Where(ps ...predicate.TaskLog) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the TaskLogMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *TaskLogMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.TaskLog, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *TaskLogMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *TaskLogMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (TaskLog).
+func (m *TaskLogMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *TaskLogMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m.started_at != nil {
+		fields = append(fields, tasklog.FieldStartedAt)
+	}
+	if m.finished_at != nil {
+		fields = append(fields, tasklog.FieldFinishedAt)
+	}
+	if m.result != nil {
+		fields = append(fields, tasklog.FieldResult)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *TaskLogMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case tasklog.FieldStartedAt:
+		return m.StartedAt()
+	case tasklog.FieldFinishedAt:
+		return m.FinishedAt()
+	case tasklog.FieldResult:
+		return m.Result()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *TaskLogMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case tasklog.FieldStartedAt:
+		return m.OldStartedAt(ctx)
+	case tasklog.FieldFinishedAt:
+		return m.OldFinishedAt(ctx)
+	case tasklog.FieldResult:
+		return m.OldResult(ctx)
+	}
+	return nil, fmt.Errorf("unknown TaskLog field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TaskLogMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case tasklog.FieldStartedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStartedAt(v)
+		return nil
+	case tasklog.FieldFinishedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFinishedAt(v)
+		return nil
+	case tasklog.FieldResult:
+		v, ok := value.(uint8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResult(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TaskLog field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *TaskLogMutation) AddedFields() []string {
+	var fields []string
+	if m.addresult != nil {
+		fields = append(fields, tasklog.FieldResult)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *TaskLogMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case tasklog.FieldResult:
+		return m.AddedResult()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *TaskLogMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case tasklog.FieldResult:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddResult(v)
+		return nil
+	}
+	return fmt.Errorf("unknown TaskLog numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *TaskLogMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *TaskLogMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *TaskLogMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown TaskLog nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *TaskLogMutation) ResetField(name string) error {
+	switch name {
+	case tasklog.FieldStartedAt:
+		m.ResetStartedAt()
+		return nil
+	case tasklog.FieldFinishedAt:
+		m.ResetFinishedAt()
+		return nil
+	case tasklog.FieldResult:
+		m.ResetResult()
+		return nil
+	}
+	return fmt.Errorf("unknown TaskLog field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *TaskLogMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.tasks != nil {
+		edges = append(edges, tasklog.EdgeTasks)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *TaskLogMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case tasklog.EdgeTasks:
+		if id := m.tasks; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *TaskLogMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *TaskLogMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *TaskLogMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedtasks {
+		edges = append(edges, tasklog.EdgeTasks)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *TaskLogMutation) EdgeCleared(name string) bool {
+	switch name {
+	case tasklog.EdgeTasks:
+		return m.clearedtasks
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *TaskLogMutation) ClearEdge(name string) error {
+	switch name {
+	case tasklog.EdgeTasks:
+		m.ClearTasks()
+		return nil
+	}
+	return fmt.Errorf("unknown TaskLog unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *TaskLogMutation) ResetEdge(name string) error {
+	switch name {
+	case tasklog.EdgeTasks:
+		m.ResetTasks()
+		return nil
+	}
+	return fmt.Errorf("unknown TaskLog edge %s", name)
 }

@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/suyuan32/simple-admin-job/ent/predicate"
 	"github.com/suyuan32/simple-admin-job/ent/task"
+	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
 // TaskUpdate is the builder for updating Task entities.
@@ -91,9 +92,45 @@ func (tu *TaskUpdate) SetPayload(s string) *TaskUpdate {
 	return tu
 }
 
+// AddTaskLogIDs adds the "task_logs" edge to the TaskLog entity by IDs.
+func (tu *TaskUpdate) AddTaskLogIDs(ids ...uint64) *TaskUpdate {
+	tu.mutation.AddTaskLogIDs(ids...)
+	return tu
+}
+
+// AddTaskLogs adds the "task_logs" edges to the TaskLog entity.
+func (tu *TaskUpdate) AddTaskLogs(t ...*TaskLog) *TaskUpdate {
+	ids := make([]uint64, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.AddTaskLogIDs(ids...)
+}
+
 // Mutation returns the TaskMutation object of the builder.
 func (tu *TaskUpdate) Mutation() *TaskMutation {
 	return tu.mutation
+}
+
+// ClearTaskLogs clears all "task_logs" edges to the TaskLog entity.
+func (tu *TaskUpdate) ClearTaskLogs() *TaskUpdate {
+	tu.mutation.ClearTaskLogs()
+	return tu
+}
+
+// RemoveTaskLogIDs removes the "task_logs" edge to TaskLog entities by IDs.
+func (tu *TaskUpdate) RemoveTaskLogIDs(ids ...uint64) *TaskUpdate {
+	tu.mutation.RemoveTaskLogIDs(ids...)
+	return tu
+}
+
+// RemoveTaskLogs removes "task_logs" edges to TaskLog entities.
+func (tu *TaskUpdate) RemoveTaskLogs(t ...*TaskLog) *TaskUpdate {
+	ids := make([]uint64, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tu.RemoveTaskLogIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -167,6 +204,60 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := tu.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
+	}
+	if tu.mutation.TaskLogsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.RemovedTaskLogsIDs(); len(nodes) > 0 && !tu.mutation.TaskLogsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.TaskLogsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -251,9 +342,45 @@ func (tuo *TaskUpdateOne) SetPayload(s string) *TaskUpdateOne {
 	return tuo
 }
 
+// AddTaskLogIDs adds the "task_logs" edge to the TaskLog entity by IDs.
+func (tuo *TaskUpdateOne) AddTaskLogIDs(ids ...uint64) *TaskUpdateOne {
+	tuo.mutation.AddTaskLogIDs(ids...)
+	return tuo
+}
+
+// AddTaskLogs adds the "task_logs" edges to the TaskLog entity.
+func (tuo *TaskUpdateOne) AddTaskLogs(t ...*TaskLog) *TaskUpdateOne {
+	ids := make([]uint64, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.AddTaskLogIDs(ids...)
+}
+
 // Mutation returns the TaskMutation object of the builder.
 func (tuo *TaskUpdateOne) Mutation() *TaskMutation {
 	return tuo.mutation
+}
+
+// ClearTaskLogs clears all "task_logs" edges to the TaskLog entity.
+func (tuo *TaskUpdateOne) ClearTaskLogs() *TaskUpdateOne {
+	tuo.mutation.ClearTaskLogs()
+	return tuo
+}
+
+// RemoveTaskLogIDs removes the "task_logs" edge to TaskLog entities by IDs.
+func (tuo *TaskUpdateOne) RemoveTaskLogIDs(ids ...uint64) *TaskUpdateOne {
+	tuo.mutation.RemoveTaskLogIDs(ids...)
+	return tuo
+}
+
+// RemoveTaskLogs removes "task_logs" edges to TaskLog entities.
+func (tuo *TaskUpdateOne) RemoveTaskLogs(t ...*TaskLog) *TaskUpdateOne {
+	ids := make([]uint64, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return tuo.RemoveTaskLogIDs(ids...)
 }
 
 // Where appends a list predicates to the TaskUpdate builder.
@@ -357,6 +484,60 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (_node *Task, err error) 
 	}
 	if value, ok := tuo.mutation.Payload(); ok {
 		_spec.SetField(task.FieldPayload, field.TypeString, value)
+	}
+	if tuo.mutation.TaskLogsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.RemovedTaskLogsIDs(); len(nodes) > 0 && !tuo.mutation.TaskLogsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.TaskLogsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   task.TaskLogsTable,
+			Columns: []string{task.TaskLogsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUint64,
+					Column: tasklog.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Task{config: tuo.config}
 	_spec.Assign = _node.assignValues
