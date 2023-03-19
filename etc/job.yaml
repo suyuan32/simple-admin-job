@@ -40,3 +40,7 @@ AsynqConf:
 #  Concurrency: 20 # max concurrent process job task num
 #  SyncInterval: 10 # seconds, this field specifies how often sync should happen
   Enable: true
+
+TaskConf:
+  EnableScheduledTask: false
+  EnableDPTask: true
