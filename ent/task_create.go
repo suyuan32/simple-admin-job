@@ -258,10 +258,7 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 			Columns: []string{task.TaskLogsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
-					Column: tasklog.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(tasklog.FieldID, field.TypeUint64),
 			},
 		}
 		for _, k := range nodes {

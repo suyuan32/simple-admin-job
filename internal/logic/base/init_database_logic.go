@@ -12,7 +12,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/types/pattern"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
-	"github.com/suyuan32/simple-admin-job/job"
+	"github.com/suyuan32/simple-admin-job/types/job"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

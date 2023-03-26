@@ -31,7 +31,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/task/scheduletask"
 	"github.com/suyuan32/simple-admin-job/internal/server"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
-	"github.com/suyuan32/simple-admin-job/job"
+	"github.com/suyuan32/simple-admin-job/types/job"
 )
 
 var configFile = flag.String("f", "etc/job.yaml", "the config file")

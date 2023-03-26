@@ -6,7 +6,7 @@ package jobclient
 import (
 	"context"
 
-	"github.com/suyuan32/simple-admin-job/job"
+	"github.com/suyuan32/simple-admin-job/types/job"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

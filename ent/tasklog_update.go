@@ -131,10 +131,7 @@ func (tlu *TaskLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{tasklog.TasksColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
-					Column: task.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeUint64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -147,10 +144,7 @@ func (tlu *TaskLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{tasklog.TasksColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
-					Column: task.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeUint64),
 			},
 		}
 		for _, k := range nodes {
@@ -310,10 +304,7 @@ func (tluo *TaskLogUpdateOne) sqlSave(ctx context.Context) (_node *TaskLog, err 
 			Columns: []string{tasklog.TasksColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
-					Column: task.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeUint64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -326,10 +317,7 @@ func (tluo *TaskLogUpdateOne) sqlSave(ctx context.Context) (_node *TaskLog, err 
 			Columns: []string{tasklog.TasksColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeUint64,
-					Column: task.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeUint64),
 			},
 		}
 		for _, k := range nodes {

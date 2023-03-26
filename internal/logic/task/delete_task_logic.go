@@ -9,7 +9,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/ent/task"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
-	"github.com/suyuan32/simple-admin-job/job"
+	"github.com/suyuan32/simple-admin-job/types/job"
 
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/zeromicro/go-zero/core/logx"

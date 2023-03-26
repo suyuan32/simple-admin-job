@@ -10,7 +10,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/internal/logic/task"
 	"github.com/suyuan32/simple-admin-job/internal/logic/tasklog"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
-	"github.com/suyuan32/simple-admin-job/job"
+	"github.com/suyuan32/simple-admin-job/types/job"
 )
 
 type JobServer struct {
