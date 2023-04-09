@@ -2,14 +2,14 @@ module github.com/suyuan32/simple-admin-job
 
 go 1.20
 
-replace github.com/zeromicro/go-zero v1.5.0 => github.com/suyuan32/simple-admin-tools v0.3.0
+replace github.com/zeromicro/go-zero v1.5.1 => github.com/suyuan32/simple-admin-tools v0.3.2
 
 require (
 	entgo.io/ent v0.11.10
 	github.com/hibiken/asynq v0.24.0
 	github.com/pkg/errors v0.9.1
 	github.com/suyuan32/simple-admin-common v0.3.0
-	github.com/zeromicro/go-zero v1.5.0
+	github.com/zeromicro/go-zero v1.5.1
 	google.golang.org/grpc v1.54.0
 	google.golang.org/protobuf v1.30.0
 )
@@ -93,7 +93,7 @@ require (
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/oauth2 v0.6.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/term v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
