@@ -3,18 +3,14 @@ ListenOn: 0.0.0.0:9105
 
 DatabaseConf:
   Type: mysql
-  Host: 127.0.0.1
+  Host: 10.5.0.2
   Port: 3306
   DBName: simple_admin
-  Username: # set your username
-  Password: # set your password
+  Username: root # set your username
+  Password: simple-admin. # set your password
   MaxOpenConn: 100
   SSLMode: disable
   CacheTime: 5
-
-RedisConf:
-  Host: 127.0.0.1:6379
-  Type: node
 
 Log:
   ServiceName: jobRpcLogger
@@ -25,6 +21,10 @@ Log:
   Compress: false
   KeepDays: 7
   StackCoolDownMillis: 100
+
+RedisConf:
+  Host: 10.5.0.3:6379
+  Type: node
 
 Prometheus:
   Host: 0.0.0.0
