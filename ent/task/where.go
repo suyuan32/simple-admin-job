@@ -564,11 +564,7 @@ func HasTaskLogs() predicate.Task {
 // HasTaskLogsWith applies the HasEdge predicate on the "task_logs" edge with a given conditions (other predicates).
 func HasTaskLogsWith(preds ...predicate.TaskLog) predicate.Task {
 	return predicate.Task(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(TaskLogsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TaskLogsTable, TaskLogsColumn),
-		)
+		step := newTaskLogsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

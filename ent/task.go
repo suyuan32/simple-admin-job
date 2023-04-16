@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/suyuan32/simple-admin-job/ent/task"
 )
@@ -34,7 +35,8 @@ type Task struct {
 	Payload string `json:"payload,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TaskQuery when eager-loading is set.
-	Edges TaskEdges `json:"edges"`
+	Edges        TaskEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // TaskEdges holds the relations/edges for other nodes in the graph.
@@ -67,7 +69,7 @@ func (*Task) scanValues(columns []string) ([]any, error) {
 		case task.FieldCreatedAt, task.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Task", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -135,9 +137,17 @@ func (t *Task) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.Payload = value.String
 			}
+		default:
+			t.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Task.
+// This includes values selected through modifiers, order, etc.
+func (t *Task) Value(name string) (ent.Value, error) {
+	return t.selectValues.Get(name)
 }
 
 // QueryTaskLogs queries the "task_logs" edge of the Task entity.

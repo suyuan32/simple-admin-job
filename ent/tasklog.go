@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/suyuan32/simple-admin-job/ent/task"
 	"github.com/suyuan32/simple-admin-job/ent/tasklog"
@@ -27,6 +28,7 @@ type TaskLog struct {
 	// The values are being populated by the TaskLogQuery when eager-loading is set.
 	Edges          TaskLogEdges `json:"edges"`
 	task_task_logs *uint64
+	selectValues   sql.SelectValues
 }
 
 // TaskLogEdges holds the relations/edges for other nodes in the graph.
@@ -63,7 +65,7 @@ func (*TaskLog) scanValues(columns []string) ([]any, error) {
 		case tasklog.ForeignKeys[0]: // task_task_logs
 			values[i] = new(sql.NullInt64)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type TaskLog", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -108,9 +110,17 @@ func (tl *TaskLog) assignValues(columns []string, values []any) error {
 				tl.task_task_logs = new(uint64)
 				*tl.task_task_logs = uint64(value.Int64)
 			}
+		default:
+			tl.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the TaskLog.
+// This includes values selected through modifiers, order, etc.
+func (tl *TaskLog) Value(name string) (ent.Value, error) {
+	return tl.selectValues.Get(name)
 }
 
 // QueryTasks queries the "tasks" edge of the TaskLog entity.

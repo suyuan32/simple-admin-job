@@ -20,7 +20,7 @@ import (
 type TaskQuery struct {
 	config
 	ctx          *QueryContext
-	order        []OrderFunc
+	order        []task.OrderOption
 	inters       []Interceptor
 	predicates   []predicate.Task
 	withTaskLogs *TaskLogQuery
@@ -55,7 +55,7 @@ func (tq *TaskQuery) Unique(unique bool) *TaskQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (tq *TaskQuery) Order(o ...OrderFunc) *TaskQuery {
+func (tq *TaskQuery) Order(o ...task.OrderOption) *TaskQuery {
 	tq.order = append(tq.order, o...)
 	return tq
 }
@@ -271,7 +271,7 @@ func (tq *TaskQuery) Clone() *TaskQuery {
 	return &TaskQuery{
 		config:       tq.config,
 		ctx:          tq.ctx.Clone(),
-		order:        append([]OrderFunc{}, tq.order...),
+		order:        append([]task.OrderOption{}, tq.order...),
 		inters:       append([]Interceptor{}, tq.inters...),
 		predicates:   append([]predicate.Task{}, tq.predicates...),
 		withTaskLogs: tq.withTaskLogs.Clone(),
@@ -414,7 +414,7 @@ func (tq *TaskQuery) loadTaskLogs(ctx context.Context, query *TaskLogQuery, node
 	}
 	query.withFKs = true
 	query.Where(predicate.TaskLog(func(s *sql.Selector) {
-		s.Where(sql.InValues(task.TaskLogsColumn, fks...))
+		s.Where(sql.InValues(s.C(task.TaskLogsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
