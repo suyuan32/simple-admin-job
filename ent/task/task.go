@@ -4,6 +4,9 @@ package task
 
 import (
 	"time"
+
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -73,3 +76,72 @@ var (
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus uint8
 )
+
+// OrderOption defines the ordering options for the Task queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByTaskGroup orders the results by the task_group field.
+func ByTaskGroup(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTaskGroup, opts...).ToFunc()
+}
+
+// ByCronExpression orders the results by the cron_expression field.
+func ByCronExpression(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCronExpression, opts...).ToFunc()
+}
+
+// ByPattern orders the results by the pattern field.
+func ByPattern(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPattern, opts...).ToFunc()
+}
+
+// ByPayload orders the results by the payload field.
+func ByPayload(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPayload, opts...).ToFunc()
+}
+
+// ByTaskLogsCount orders the results by task_logs count.
+func ByTaskLogsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTaskLogsStep(), opts...)
+	}
+}
+
+// ByTaskLogs orders the results by task_logs terms.
+func ByTaskLogs(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTaskLogsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newTaskLogsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TaskLogsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TaskLogsTable, TaskLogsColumn),
+	)
+}

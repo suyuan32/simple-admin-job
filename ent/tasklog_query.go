@@ -19,7 +19,7 @@ import (
 type TaskLogQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []tasklog.OrderOption
 	inters     []Interceptor
 	predicates []predicate.TaskLog
 	withTasks  *TaskQuery
@@ -55,7 +55,7 @@ func (tlq *TaskLogQuery) Unique(unique bool) *TaskLogQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (tlq *TaskLogQuery) Order(o ...OrderFunc) *TaskLogQuery {
+func (tlq *TaskLogQuery) Order(o ...tasklog.OrderOption) *TaskLogQuery {
 	tlq.order = append(tlq.order, o...)
 	return tlq
 }
@@ -271,7 +271,7 @@ func (tlq *TaskLogQuery) Clone() *TaskLogQuery {
 	return &TaskLogQuery{
 		config:     tlq.config,
 		ctx:        tlq.ctx.Clone(),
-		order:      append([]OrderFunc{}, tlq.order...),
+		order:      append([]tasklog.OrderOption{}, tlq.order...),
 		inters:     append([]Interceptor{}, tlq.inters...),
 		predicates: append([]predicate.TaskLog{}, tlq.predicates...),
 		withTasks:  tlq.withTasks.Clone(),

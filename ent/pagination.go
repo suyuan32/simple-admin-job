@@ -57,7 +57,7 @@ func (o OrderDirection) reverse() OrderDirection {
 const errInvalidPagination = "INVALID_PAGINATION"
 
 type TaskPager struct {
-	Order  OrderFunc
+	Order  task.OrderOption
 	Filter func(*TaskQuery) (*TaskQuery, error)
 }
 
@@ -136,7 +136,7 @@ func (t *TaskQuery) Page(
 }
 
 type TaskLogPager struct {
-	Order  OrderFunc
+	Order  tasklog.OrderOption
 	Filter func(*TaskLogQuery) (*TaskLogQuery, error)
 }
 

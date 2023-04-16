@@ -1,9 +1,24 @@
-PROJECT=job
+# Custom configuration | 独立配置
+# Service name | 项目名称
+SERVICE=Job
+# Service name in specific style | 项目经过style格式化的名称
+SERVICE_STYLE=job
+# Service name in lowercase | 项目名称全小写格式
+SERVICE_LOWER=job
+# Service name in snake format | 项目名称下划线格式
+SERVICE_SNAKE=job
+# Service name in snake format | 项目名称短杠格式
+SERVICE_DASH=job
+
+# The project version, if you don't use git, you should set it manually | 项目版本，如果不使用git请手动设置
+VERSION=$(shell git describe --tags --always)
+
+# ---- You may not need to modify the codes below | 下面的代码大概率不需要更改 ----
+
 GO ?= go
 GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go")
 LDFLAGS := -s -w
-VERSION=$(shell git describe --tags --always)
 
 .PHONY: test
 test: # Run test for the project | 运行项目测试
@@ -23,44 +38,49 @@ tools: # Install the necessary tools | 安装必要的工具
 
 .PHONY: docker
 docker: # Build the docker image | 构建 docker 镜像
-	docker build -f Dockerfile -t ${DOCKER_USERNAME}/$(PROJECT)-rpc-demo:${VERSION} .
+	docker build -f Dockerfile -t ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc:${VERSION} .
 	@echo "Build docker successfully"
 
 .PHONY: publish-docker
 publish-docker: # Publish docker image | 发布 docker 镜像
 	echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin https://${REPO}
-	docker push ${DOCKER_USERNAME}/$(PROJECT)-rpc-demo:${VERSION}
+	docker push ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc:${VERSION}
 	@echo "Publish docker successfully"
 
 .PHONY: gen-rpc
 gen-rpc: # Generate RPC files from proto | 生成 RPC 的代码
-	goctls rpc protoc ./$(PROJECT).proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
-	@echo "Generate rpc successfully"
+	goctls rpc protoc ./$(SERVICE_SNAKE).proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
+ifeq ($(shell uname -s), Darwin)
+	sed -i "" 's/,omitempty//g' ./types/$(SERVICE_LOWER)/*.pb.go
+else
+	sed -i 's/,omitempty//g' ./types/$(SERVICE_LOWER)/*.pb.go
+endif
+	@echo "Generate RPC codes successfully"
 
 .PHONY: gen-ent
 gen-ent: # Generate Ent codes | 生成 Ent 的代码
 	go run -mod=mod entgo.io/ent/cmd/ent generate --template glob="./ent/template/*.tmpl" ./ent/schema
-	@echo "Generate ent successfully"
+	@echo "Generate Ent codes successfully"
 
 .PHONY: gen-rpc-ent-logic
-gen-rpc-ent-logic: # Generate logic code from schema, need model and group params | 根据 schema 生成逻辑代码, 需要设置 model 和 group
-	goctls rpc ent --schema=./ent/schema  --style=go_zero --multiple=false --service_name=$(PROJECT) --search_key_num=3 --o=./ --model=$(model) --group=$(group) --proto_out=./desc/$(shell echo $(model) | tr A-Z a-z).proto --overwrite=true
-	@echo "Generate ent logic codes successfully"
+gen-rpc-ent-logic: # Generate logic code from Ent, need model and group params | 根据 Ent 生成逻辑代码, 需要设置 model 和 group
+	goctls rpc ent --schema=./ent/schema  --style=go_zero --multiple=false --service_name=$(SERVICE) --search_key_num=3 --output=./ --model=$(model) --group=$(group) --proto_out=./desc/$(shell echo $(model) | tr A-Z a-z).proto --overwrite=true
+	@echo "Generate logic codes from Ent successfully"
 
 .PHONY: build-win
 build-win: # Build project for Windows | 构建Windows下的可执行文件
-	env CGO_ENABLED=0 GOOS=windows go build -ldflags "$(LDFLAGS)" -o $(PROJECT).exe $(PROJECT).go
-	@echo "Build project successfully"
+	env CGO_ENABLED=0 GOOS=windows go build -ldflags "$(LDFLAGS)" -o $(SERVICE_STYLE).exe $(SERVICE_STYLE).go
+	@echo "Build project for Windows successfully"
 
 .PHONY: build-mac
 build-mac: # Build project for MacOS | 构建MacOS下的可执行文件
-	env CGO_ENABLED=0 GOOS=darwin go build -ldflags "$(LDFLAGS)" -o $(PROJECT) $(PROJECT).go
-	@echo "Build project successfully"
+	env CGO_ENABLED=0 GOOS=darwin go build -ldflags "$(LDFLAGS)" -o $(SERVICE_STYLE) $(SERVICE_STYLE).go
+	@echo "Build project for MacOS successfully"
 
 .PHONY: build-linux
 build-linux: # Build project for Linux | 构建Linux下的可执行文件
-	env CGO_ENABLED=0 GOOS=linux go build -ldflags "$(LDFLAGS)" -o $(PROJECT) $(PROJECT).go
-	@echo "Build project successfully"
+	env CGO_ENABLED=0 GOOS=linux go build -ldflags "$(LDFLAGS)" -o $(SERVICE_STYLE) $(SERVICE_STYLE).go
+	@echo "Build project for Linux successfully"
 
 .PHONY: help
 help: # Show help | 显示帮助
