@@ -11,6 +11,7 @@ DatabaseConf:
   MaxOpenConn: 100
   SSLMode: disable
   CacheTime: 5
+  MysqlConfig: '&charset=utf8&loc=Asia/Shanghai'
 
 Log:
   ServiceName: jobRpcLogger
