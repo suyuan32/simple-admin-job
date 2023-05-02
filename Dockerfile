@@ -31,5 +31,5 @@ ENV CONFIG_FILE=${CONFIG_FILE}
 COPY --from=builder /app/${PROJECT}_rpc ./
 COPY --from=builder /app/etc/${CONFIG_FILE} ./etc/
 
-EXPOSE 9100
+EXPOSE 9105
 ENTRYPOINT ./${PROJECT}_rpc -f etc/${CONFIG_FILE}
