@@ -27,7 +27,7 @@ func (tld *TaskLogDelete) Where(ps ...predicate.TaskLog) *TaskLogDelete {
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (tld *TaskLogDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks[int, TaskLogMutation](ctx, tld.sqlExec, tld.mutation, tld.hooks)
+	return withHooks(ctx, tld.sqlExec, tld.mutation, tld.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
