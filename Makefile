@@ -11,7 +11,7 @@ SERVICE_SNAKE=job
 SERVICE_DASH=job
 
 # The project version, if you don't use git, you should set it manually | 项目版本，如果不使用git请手动设置
-VERSION=$(shell git describe --tags --always)
+VERSION=v1.0.3
 
 # ---- You may not need to modify the codes below | 下面的代码大概率不需要更改 ----
 
@@ -38,13 +38,13 @@ tools: # Install the necessary tools | 安装必要的工具
 
 .PHONY: docker
 docker: # Build the docker image | 构建 docker 镜像
-	docker build -f Dockerfile -t ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc:${VERSION} .
+	docker build -f Dockerfile -t ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc-docker:${VERSION} .
 	@echo "Build docker successfully"
 
 .PHONY: publish-docker
 publish-docker: # Publish docker image | 发布 docker 镜像
 	echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin https://${REPO}
-	docker push ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc:${VERSION}
+	docker push ${DOCKER_USERNAME}/$(SERVICE_DASH)-rpc-docker:${VERSION}
 	@echo "Publish docker successfully"
 
 .PHONY: gen-rpc
