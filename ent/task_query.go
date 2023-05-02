@@ -427,7 +427,7 @@ func (tq *TaskQuery) loadTaskLogs(ctx context.Context, query *TaskLogQuery, node
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "task_task_logs" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "task_task_logs" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

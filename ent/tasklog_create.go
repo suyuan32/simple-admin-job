@@ -80,7 +80,7 @@ func (tlc *TaskLogCreate) Mutation() *TaskLogMutation {
 // Save creates the TaskLog in the database.
 func (tlc *TaskLogCreate) Save(ctx context.Context) (*TaskLog, error) {
 	tlc.defaults()
-	return withHooks[*TaskLog, TaskLogMutation](ctx, tlc.sqlSave, tlc.mutation, tlc.hooks)
+	return withHooks(ctx, tlc.sqlSave, tlc.mutation, tlc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

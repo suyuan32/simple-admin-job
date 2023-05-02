@@ -80,7 +80,7 @@ func (tlu *TaskLogUpdate) ClearTasks() *TaskLogUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (tlu *TaskLogUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, TaskLogMutation](ctx, tlu.sqlSave, tlu.mutation, tlu.hooks)
+	return withHooks(ctx, tlu.sqlSave, tlu.mutation, tlu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -236,7 +236,7 @@ func (tluo *TaskLogUpdateOne) Select(field string, fields ...string) *TaskLogUpd
 
 // Save executes the query and returns the updated TaskLog entity.
 func (tluo *TaskLogUpdateOne) Save(ctx context.Context) (*TaskLog, error) {
-	return withHooks[*TaskLog, TaskLogMutation](ctx, tluo.sqlSave, tluo.mutation, tluo.hooks)
+	return withHooks(ctx, tluo.sqlSave, tluo.mutation, tluo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
