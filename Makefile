@@ -11,7 +11,7 @@ SERVICE_SNAKE=job
 SERVICE_DASH=job
 
 # The project version, if you don't use git, you should set it manually | 项目版本，如果不使用git请手动设置
-VERSION=$(shell git describe --tags --always)
+VERSION=v1.0.6
 
 # The project file name style | 项目文件命名风格
 PROJECT_STYLE=go_zero
@@ -20,7 +20,7 @@ PROJECT_STYLE=go_zero
 PROJECT_I18N=true
 
 # The suffix after build or compile | 构建后缀
-PROJECT_BUILD_SUFFIX=rpc
+PROJECT_BUILD_SUFFIX=rpc-docker
 
 
 # ---- You may not need to modify the codes below | 下面的代码大概率不需要更改 ----
