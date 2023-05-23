@@ -3,8 +3,8 @@ syntax = "proto3";
 package job;
 option go_package="./job";
 
-message IDsReq {
-  repeated uint64 ids = 1;
+message UUIDReq {
+  string id = 1;
 }
 
 message BaseUUIDResp {
@@ -24,9 +24,13 @@ message TaskInfo {
   string payload = 9;
 }
 
-message PageInfoReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
+message UUIDsReq {
+  repeated string ids = 1;
+}
+
+message BaseIDResp {
+  uint64 id = 1;
+  string msg = 2;
 }
 
 message TaskListReq {
@@ -36,9 +40,18 @@ message TaskListReq {
   string task_group = 4;
 }
 
-message TaskLogListResp {
-  uint64 total = 1;
-  repeated TaskLogInfo data = 2;
+message TaskLogInfo {
+  uint64 id = 1;
+  int64 started_at = 4;
+  int64 finished_at = 5;
+  uint32 result = 6;
+}
+
+//  base message
+message Empty {}
+
+message BaseResp {
+  string msg = 1;
 }
 
 message TaskLogListReq {
@@ -48,20 +61,13 @@ message TaskLogListReq {
   uint32 result = 4;
 }
 
-//  base message
-message Empty {}
-
-message UUIDsReq {
-  repeated string ids = 1;
-}
-
-message UUIDReq {
-  string id = 1;
-}
-
-message BaseIDResp {
+message IDReq {
   uint64 id = 1;
-  string msg = 2;
+}
+
+message PageInfoReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
 }
 
 message TaskListResp {
@@ -69,19 +75,13 @@ message TaskListResp {
   repeated TaskInfo data = 2;
 }
 
-message IDReq {
-  uint64 id = 1;
+message TaskLogListResp {
+  uint64 total = 1;
+  repeated TaskLogInfo data = 2;
 }
 
-message BaseResp {
-  string msg = 1;
-}
-
-message TaskLogInfo {
-  uint64 id = 1;
-  int64 started_at = 4;
-  int64 finished_at = 5;
-  uint32 result = 6;
+message IDsReq {
+  repeated uint64 ids = 1;
 }
 
 service Job {
