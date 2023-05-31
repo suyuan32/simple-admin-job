@@ -2,6 +2,7 @@ package base
 
 import (
 	"context"
+
 	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
 
 	"entgo.io/ent/dialect/sql/schema"
@@ -61,9 +62,9 @@ func (l *InitDatabaseLogic) insertTaskData() error {
 	err := l.svcCtx.DB.Task.Create().
 		SetName("hello_world").
 		SetTaskGroup("base").
-		SetCronExpression("@every 5s").
+		SetCronExpression("@every 60s").
 		SetPattern(pattern.RecordHelloWorld).
-		SetPayload("{\"name\": \"Mike (DPTask 5s)\"}").
+		SetPayload("{\"name\": \"Mike (DPTask 60s)\"}").
 		Exec(l.ctx)
 
 	if err != nil {
