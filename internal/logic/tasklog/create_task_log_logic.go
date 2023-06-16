@@ -10,6 +10,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-common/i18n"
 
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,9 +30,8 @@ func NewCreateTaskLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 func (l *CreateTaskLogLogic) CreateTaskLog(in *job.TaskLogInfo) (*job.BaseIDResp, error) {
 	result, err := l.svcCtx.DB.TaskLog.Create().
-		SetStartedAt(time.Unix(in.StartedAt, 0)).
-		SetFinishedAt(time.Unix(in.FinishedAt, 0)).
-		SetResult(uint8(in.Result)).
+		SetNotNilFinishedAt(pointy.GetPointer(time.Unix(*in.FinishedAt, 0))).
+		SetNotNilResult(pointy.GetPointer(uint8(*in.Result))).
 		Save(l.ctx)
 
 	if err != nil {

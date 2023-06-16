@@ -3,10 +3,12 @@ syntax = "proto3";
 // TaskLog message
 
 message TaskLogInfo {
-  uint64 id = 1;
-  int64  started_at = 4;
-  int64  finished_at = 5;
-  uint32 result = 6;
+  optional uint64 id = 1;
+  optional int64 created_at = 2;
+  optional int64 updated_at = 3;
+  optional int64  started_at = 4;
+  optional int64  finished_at = 5;
+  optional uint32 result = 6;
 }
 
 message TaskLogListResp {
@@ -17,8 +19,8 @@ message TaskLogListResp {
 message TaskLogListReq {
   uint64 page = 1;
   uint64 page_size = 2;
-  uint64 task_id = 3;
-  uint32 result = 4;
+  optional uint64 task_id = 3;
+  optional uint32 result = 4;
 }
 
 

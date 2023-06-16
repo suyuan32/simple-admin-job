@@ -7,6 +7,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
 	"github.com/suyuan32/simple-admin-job/types/job"
 
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -31,14 +32,14 @@ func (l *GetTaskByIdLogic) GetTaskById(in *job.IDReq) (*job.TaskInfo, error) {
 	}
 
 	return &job.TaskInfo{
-		Id:             result.ID,
-		CreatedAt:      result.CreatedAt.UnixMilli(),
-		UpdatedAt:      result.UpdatedAt.UnixMilli(),
-		Status:         uint32(result.Status),
-		Name:           result.Name,
-		TaskGroup:      result.TaskGroup,
-		CronExpression: result.CronExpression,
-		Pattern:        result.Pattern,
-		Payload:        result.Payload,
+		Id:             &result.ID,
+		CreatedAt:      pointy.GetPointer(result.CreatedAt.Unix()),
+		UpdatedAt:      pointy.GetPointer(result.UpdatedAt.Unix()),
+		Status:         pointy.GetPointer(uint32(result.Status)),
+		Name:           &result.Name,
+		TaskGroup:      &result.TaskGroup,
+		CronExpression: &result.CronExpression,
+		Pattern:        &result.Pattern,
+		Payload:        &result.Payload,
 	}, nil
 }
