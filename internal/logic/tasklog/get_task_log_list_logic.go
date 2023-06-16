@@ -35,7 +35,7 @@ func (l *GetTaskLogListLogic) GetTaskLogList(in *job.TaskLogListReq) (*job.TaskL
 		predicates = append(predicates, tasklog.HasTasksWith(task.IDEQ(*in.TaskId)))
 	}
 
-	if in.Result != nil {
+	if in.Result != nil && *in.Result != 0 {
 		predicates = append(predicates, tasklog.ResultEQ(uint8(*in.Result)))
 	}
 
