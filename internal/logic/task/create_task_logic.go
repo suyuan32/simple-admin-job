@@ -29,7 +29,7 @@ func NewCreateTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 
 func (l *CreateTaskLogic) CreateTask(in *job.TaskInfo) (*job.BaseIDResp, error) {
 	result, err := l.svcCtx.DB.Task.Create().
-		SetNotNilStatus(pointy.GetPointer(uint8(*in.Status))).
+		SetNotNilStatus(pointy.GetStatusPointer(in.Status)).
 		SetNotNilName(in.Name).
 		SetNotNilTaskGroup(in.TaskGroup).
 		SetNotNilCronExpression(in.CronExpression).

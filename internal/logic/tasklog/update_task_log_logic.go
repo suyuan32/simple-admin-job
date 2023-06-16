@@ -2,7 +2,6 @@ package tasklog
 
 import (
 	"context"
-	"time"
 
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
@@ -30,8 +29,8 @@ func NewUpdateTaskLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 
 func (l *UpdateTaskLogLogic) UpdateTaskLog(in *job.TaskLogInfo) (*job.BaseResp, error) {
 	err := l.svcCtx.DB.TaskLog.UpdateOneID(*in.Id).
-		SetNotNilFinishedAt(pointy.GetPointer(time.Unix(*in.FinishedAt, 0))).
-		SetNotNilResult(pointy.GetPointer(uint8(*in.Result))).
+		SetNotNilFinishedAt(pointy.GetTimePointer(in.FinishedAt, 0)).
+		SetNotNilResult(pointy.GetStatusPointer(in.Result)).
 		Exec(l.ctx)
 
 	if err != nil {
