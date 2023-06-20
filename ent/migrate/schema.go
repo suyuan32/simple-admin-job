@@ -37,9 +37,9 @@ var (
 	// SysTaskLogsColumns holds the columns for the "sys_task_logs" table.
 	SysTaskLogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUint64, Increment: true},
-		{Name: "started_at", Type: field.TypeTime},
-		{Name: "finished_at", Type: field.TypeTime},
-		{Name: "result", Type: field.TypeUint8},
+		{Name: "started_at", Type: field.TypeTime, Comment: "Task Started Time | 任务启动时间"},
+		{Name: "finished_at", Type: field.TypeTime, Comment: "Task Finished Time | 任务完成时间"},
+		{Name: "result", Type: field.TypeUint8, Comment: "The Task Process Result | 任务执行结果"},
 		{Name: "task_task_logs", Type: field.TypeUint64, Nullable: true},
 	}
 	// SysTaskLogsTable holds the schema information for the "sys_task_logs" table.
