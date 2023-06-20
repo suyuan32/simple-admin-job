@@ -9,6 +9,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-common/i18n"
 
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -27,18 +28,18 @@ func NewUpdateTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update
 }
 
 func (l *UpdateTaskLogic) UpdateTask(in *job.TaskInfo) (*job.BaseResp, error) {
-	err := l.svcCtx.DB.Task.UpdateOneID(in.Id).
-		SetNotEmptyStatus(uint8(in.Status)).
-		SetNotEmptyName(in.Name).
-		SetNotEmptyTaskGroup(in.TaskGroup).
-		SetNotEmptyCronExpression(in.CronExpression).
-		SetNotEmptyPattern(in.Pattern).
-		SetNotEmptyPayload(in.Payload).
+	err := l.svcCtx.DB.Task.UpdateOneID(*in.Id).
+		SetNotNilStatus(pointy.GetStatusPointer(in.Status)).
+		SetNotNilName(in.Name).
+		SetNotNilTaskGroup(in.TaskGroup).
+		SetNotNilCronExpression(in.CronExpression).
+		SetNotNilPattern(in.Pattern).
+		SetNotNilPayload(in.Payload).
 		Exec(l.ctx)
 
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
 
-	return &job.BaseResp{Msg: i18n.UpdateSuccess}, nil
+	return &job.BaseResp{Msg: i18n.CreateSuccess}, nil
 }

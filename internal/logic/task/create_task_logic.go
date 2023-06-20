@@ -9,6 +9,7 @@ import (
 
 	"github.com/suyuan32/simple-admin-common/i18n"
 
+	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,12 +29,12 @@ func NewCreateTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 
 func (l *CreateTaskLogic) CreateTask(in *job.TaskInfo) (*job.BaseIDResp, error) {
 	result, err := l.svcCtx.DB.Task.Create().
-		SetStatus(uint8(in.Status)).
-		SetName(in.Name).
-		SetTaskGroup(in.TaskGroup).
-		SetCronExpression(in.CronExpression).
-		SetPattern(in.Pattern).
-		SetPayload(in.Payload).
+		SetNotNilStatus(pointy.GetStatusPointer(in.Status)).
+		SetNotNilName(in.Name).
+		SetNotNilTaskGroup(in.TaskGroup).
+		SetNotNilCronExpression(in.CronExpression).
+		SetNotNilPattern(in.Pattern).
+		SetNotNilPayload(in.Payload).
 		Save(l.ctx)
 
 	if err != nil {

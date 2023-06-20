@@ -28,7 +28,7 @@ func (Task) Fields() []ent.Field {
 
 func (Task) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixins.BaseIDMixin{},
+		mixins.IDMixin{},
 		mixins.StatusMixin{},
 	}
 }
