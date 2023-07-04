@@ -41,5 +41,5 @@ func (l *UpdateTaskLogic) UpdateTask(in *job.TaskInfo) (*job.BaseResp, error) {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
 	}
 
-	return &job.BaseResp{Msg: i18n.CreateSuccess}, nil
+	return &job.BaseResp{Msg: i18n.UpdateSuccess}, nil
 }
