@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-job/ent/task"
 	"github.com/suyuan32/simple-admin-job/internal/enum/taskresult"
 	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/types/pattern"
 	"github.com/suyuan32/simple-admin-job/internal/utils/dberrorhandler"
+	"github.com/zeromicro/go-zero/core/errorx"
 	"github.com/zeromicro/go-zero/core/logx"
 	"time"
 
@@ -24,15 +26,24 @@ type HelloWorldHandler struct {
 }
 
 func NewHelloWorldHandler(svcCtx *svc.ServiceContext) *HelloWorldHandler {
-	taskId, _ := svcCtx.DB.Task.Query().Where(task.PatternEQ(pattern.RecordHelloWorld)).First(context.Background())
+	task, err := svcCtx.DB.Task.Query().Where(task.PatternEQ(pattern.RecordHelloWorld)).First(context.Background())
+	if err != nil || task == nil {
+		return nil
+	}
+
 	return &HelloWorldHandler{
 		svcCtx: svcCtx,
-		taskId: taskId.ID,
+		taskId: task.ID,
 	}
 }
 
 // ProcessTask if return err != nil , asynq will retry | 如果返回错误不为空则会重试
 func (l *HelloWorldHandler) ProcessTask(ctx context.Context, t *asynq.Task) error {
+	if l.taskId == 0 {
+		logx.Errorw("failed to load task info")
+		return errorx.NewInternalError(i18n.DatabaseError)
+	}
+
 	var p payload.HelloWorldPayload
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return errors.Wrapf(err, "failed to umarshal the payload :%s", string(t.Payload()))
