@@ -1,4 +1,4 @@
-FROM golang:1.20.3-alpine3.17 as builder
+FROM golang:1.20.6-alpine3.17 as builder
 
 # Define the project name | 定义项目名称
 ARG PROJECT=job
@@ -7,6 +7,7 @@ WORKDIR /build
 COPY . .
 
 RUN go env -w GO111MODULE=on \
+    && go env -w GOPROXY=https://goproxy.cn,direct \
     && go env -w CGO_ENABLED=0 \
     && go env \
     && go mod tidy \
