@@ -17,3 +17,6 @@
 .vscode/
 
 *_dev.yaml
+
+*_api
+*_rpc
