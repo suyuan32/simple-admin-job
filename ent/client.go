@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
 
 	"github.com/suyuan32/simple-admin-job/ent/migrate"
 
@@ -16,6 +17,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/suyuan32/simple-admin-job/ent/task"
 	"github.com/suyuan32/simple-admin-job/ent/tasklog"
+
+	stdsql "database/sql"
 )
 
 // Client is the client that holds all ent builders.
@@ -109,11 +112,14 @@ func Open(driverName, dataSourceName string, options ...Option) (*Client, error)
 	}
 }
 
+// ErrTxStarted is returned when trying to start a new transaction from a transactional client.
+var ErrTxStarted = errors.New("ent: cannot start a transaction within a transaction")
+
 // Tx returns a new transactional client. The provided context
 // is used until the transaction is committed or rolled back.
 func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	if _, ok := c.driver.(*txDriver); ok {
-		return nil, errors.New("ent: cannot start a transaction within a transaction")
+		return nil, ErrTxStarted
 	}
 	tx, err := newTx(ctx, c.driver)
 	if err != nil {
@@ -228,6 +234,21 @@ func (c *TaskClient) Create() *TaskCreate {
 
 // CreateBulk returns a builder for creating a bulk of Task entities.
 func (c *TaskClient) CreateBulk(builders ...*TaskCreate) *TaskCreateBulk {
+	return &TaskCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TaskClient) MapCreateBulk(slice any, setFunc func(*TaskCreate, int)) *TaskCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TaskCreateBulk{err: fmt.Errorf("calling to TaskClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TaskCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
 	return &TaskCreateBulk{config: c.config, builders: builders}
 }
 
@@ -365,6 +386,21 @@ func (c *TaskLogClient) CreateBulk(builders ...*TaskLogCreate) *TaskLogCreateBul
 	return &TaskLogCreateBulk{config: c.config, builders: builders}
 }
 
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TaskLogClient) MapCreateBulk(slice any, setFunc func(*TaskLogCreate, int)) *TaskLogCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TaskLogCreateBulk{err: fmt.Errorf("calling to TaskLogClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TaskLogCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TaskLogCreateBulk{config: c.config, builders: builders}
+}
+
 // Update returns an update builder for TaskLog.
 func (c *TaskLogClient) Update() *TaskLogUpdate {
 	mutation := newTaskLogMutation(c.config, OpUpdate)
@@ -475,3 +511,27 @@ type (
 		Task, TaskLog []ent.Interceptor
 	}
 )
+
+// ExecContext allows calling the underlying ExecContext method of the driver if it is supported by it.
+// See, database/sql#DB.ExecContext for more information.
+func (c *config) ExecContext(ctx context.Context, query string, args ...any) (stdsql.Result, error) {
+	ex, ok := c.driver.(interface {
+		ExecContext(context.Context, string, ...any) (stdsql.Result, error)
+	})
+	if !ok {
+		return nil, fmt.Errorf("Driver.ExecContext is not supported")
+	}
+	return ex.ExecContext(ctx, query, args...)
+}
+
+// QueryContext allows calling the underlying QueryContext method of the driver if it is supported by it.
+// See, database/sql#DB.QueryContext for more information.
+func (c *config) QueryContext(ctx context.Context, query string, args ...any) (*stdsql.Rows, error) {
+	q, ok := c.driver.(interface {
+		QueryContext(context.Context, string, ...any) (*stdsql.Rows, error)
+	})
+	if !ok {
+		return nil, fmt.Errorf("Driver.QueryContext is not supported")
+	}
+	return q.QueryContext(ctx, query, args...)
+}

@@ -191,11 +191,15 @@ func (tlc *TaskLogCreate) createSpec() (*TaskLog, *sqlgraph.CreateSpec) {
 // TaskLogCreateBulk is the builder for creating many TaskLog entities in bulk.
 type TaskLogCreateBulk struct {
 	config
+	err      error
 	builders []*TaskLogCreate
 }
 
 // Save creates the TaskLog entities in the database.
 func (tlcb *TaskLogCreateBulk) Save(ctx context.Context) ([]*TaskLog, error) {
+	if tlcb.err != nil {
+		return nil, tlcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(tlcb.builders))
 	nodes := make([]*TaskLog, len(tlcb.builders))
 	mutators := make([]Mutator, len(tlcb.builders))
