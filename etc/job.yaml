@@ -3,7 +3,7 @@ ListenOn: 0.0.0.0:9105
 
 DatabaseConf:
   Type: postgres
-  Host: 10.5.0.2
+  Host: postgresql-server
   Port: 5432
   DBName: simple_admin
   Username: postgres # set your username
@@ -23,7 +23,7 @@ Log:
   StackCoolDownMillis: 100
 
 RedisConf:
-  Host: 10.5.0.3:6379
+  Host: redis-server:6379
   Type: node
 
 Prometheus:
