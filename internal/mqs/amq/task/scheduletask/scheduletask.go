@@ -15,9 +15,8 @@
 package scheduletask
 
 import (
+	"fmt"
 	"log"
-
-	"github.com/pkg/errors"
 
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 )
@@ -36,7 +35,7 @@ func NewSchedulerTask(svcCtx *svc.ServiceContext) *SchedulerTask {
 func (s *SchedulerTask) Start() {
 	s.Register()
 	if err := s.svcCtx.AsynqScheduler.Run(); err != nil {
-		log.Fatal(errors.Wrapf(err, "failed to start mqtask server, error: %v", err))
+		log.Fatal(fmt.Errorf("failed to start mqtask server, error: %v", err))
 	}
 }
 
