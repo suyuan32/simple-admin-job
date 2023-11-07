@@ -15,9 +15,8 @@
 package dynamicperiodictask
 
 import (
+	"fmt"
 	"log"
-
-	"github.com/pkg/errors"
 
 	"github.com/suyuan32/simple-admin-job/internal/svc"
 )
@@ -35,7 +34,7 @@ func NewDPTask(svcCtx *svc.ServiceContext) *DPTask {
 // Start starts the server.
 func (m *DPTask) Start() {
 	if err := m.svcCtx.AsynqPTM.Run(); err != nil {
-		log.Fatal(errors.Wrapf(err, "failed to start dptask server, error: %v", err))
+		log.Fatal(fmt.Errorf("failed to start dptask server, error: %v", err))
 	}
 }
 

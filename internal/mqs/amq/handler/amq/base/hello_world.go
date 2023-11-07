@@ -3,6 +3,7 @@ package base
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-job/ent/task"
@@ -14,7 +15,6 @@ import (
 	"time"
 
 	"github.com/hibiken/asynq"
-	"github.com/pkg/errors"
 
 	"github.com/suyuan32/simple-admin-job/internal/mqs/amq/types/payload"
 	"github.com/suyuan32/simple-admin-job/internal/svc"
@@ -46,7 +46,7 @@ func (l *HelloWorldHandler) ProcessTask(ctx context.Context, t *asynq.Task) erro
 
 	var p payload.HelloWorldPayload
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
-		return errors.Wrapf(err, "failed to umarshal the payload :%s", string(t.Payload()))
+		return errors.Join(err, fmt.Errorf("failed to umarshal the payload :%s", string(t.Payload())))
 	}
 
 	startTime := time.Now()
