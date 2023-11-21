@@ -26,6 +26,7 @@ PROJECT_BUILD_SUFFIX=rpc
 # Ent enabled features | Ent 启用的官方特性
 ENT_FEATURE=sql/execquery
 
+
 # The arch of the build | 构建的架构
 GOARCH=amd64
 
