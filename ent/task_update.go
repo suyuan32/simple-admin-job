@@ -68,9 +68,25 @@ func (tu *TaskUpdate) SetName(s string) *TaskUpdate {
 	return tu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (tu *TaskUpdate) SetNillableName(s *string) *TaskUpdate {
+	if s != nil {
+		tu.SetName(*s)
+	}
+	return tu
+}
+
 // SetTaskGroup sets the "task_group" field.
 func (tu *TaskUpdate) SetTaskGroup(s string) *TaskUpdate {
 	tu.mutation.SetTaskGroup(s)
+	return tu
+}
+
+// SetNillableTaskGroup sets the "task_group" field if the given value is not nil.
+func (tu *TaskUpdate) SetNillableTaskGroup(s *string) *TaskUpdate {
+	if s != nil {
+		tu.SetTaskGroup(*s)
+	}
 	return tu
 }
 
@@ -80,15 +96,39 @@ func (tu *TaskUpdate) SetCronExpression(s string) *TaskUpdate {
 	return tu
 }
 
+// SetNillableCronExpression sets the "cron_expression" field if the given value is not nil.
+func (tu *TaskUpdate) SetNillableCronExpression(s *string) *TaskUpdate {
+	if s != nil {
+		tu.SetCronExpression(*s)
+	}
+	return tu
+}
+
 // SetPattern sets the "pattern" field.
 func (tu *TaskUpdate) SetPattern(s string) *TaskUpdate {
 	tu.mutation.SetPattern(s)
 	return tu
 }
 
+// SetNillablePattern sets the "pattern" field if the given value is not nil.
+func (tu *TaskUpdate) SetNillablePattern(s *string) *TaskUpdate {
+	if s != nil {
+		tu.SetPattern(*s)
+	}
+	return tu
+}
+
 // SetPayload sets the "payload" field.
 func (tu *TaskUpdate) SetPayload(s string) *TaskUpdate {
 	tu.mutation.SetPayload(s)
+	return tu
+}
+
+// SetNillablePayload sets the "payload" field if the given value is not nil.
+func (tu *TaskUpdate) SetNillablePayload(s *string) *TaskUpdate {
+	if s != nil {
+		tu.SetPayload(*s)
+	}
 	return tu
 }
 
@@ -309,9 +349,25 @@ func (tuo *TaskUpdateOne) SetName(s string) *TaskUpdateOne {
 	return tuo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (tuo *TaskUpdateOne) SetNillableName(s *string) *TaskUpdateOne {
+	if s != nil {
+		tuo.SetName(*s)
+	}
+	return tuo
+}
+
 // SetTaskGroup sets the "task_group" field.
 func (tuo *TaskUpdateOne) SetTaskGroup(s string) *TaskUpdateOne {
 	tuo.mutation.SetTaskGroup(s)
+	return tuo
+}
+
+// SetNillableTaskGroup sets the "task_group" field if the given value is not nil.
+func (tuo *TaskUpdateOne) SetNillableTaskGroup(s *string) *TaskUpdateOne {
+	if s != nil {
+		tuo.SetTaskGroup(*s)
+	}
 	return tuo
 }
 
@@ -321,15 +377,39 @@ func (tuo *TaskUpdateOne) SetCronExpression(s string) *TaskUpdateOne {
 	return tuo
 }
 
+// SetNillableCronExpression sets the "cron_expression" field if the given value is not nil.
+func (tuo *TaskUpdateOne) SetNillableCronExpression(s *string) *TaskUpdateOne {
+	if s != nil {
+		tuo.SetCronExpression(*s)
+	}
+	return tuo
+}
+
 // SetPattern sets the "pattern" field.
 func (tuo *TaskUpdateOne) SetPattern(s string) *TaskUpdateOne {
 	tuo.mutation.SetPattern(s)
 	return tuo
 }
 
+// SetNillablePattern sets the "pattern" field if the given value is not nil.
+func (tuo *TaskUpdateOne) SetNillablePattern(s *string) *TaskUpdateOne {
+	if s != nil {
+		tuo.SetPattern(*s)
+	}
+	return tuo
+}
+
 // SetPayload sets the "payload" field.
 func (tuo *TaskUpdateOne) SetPayload(s string) *TaskUpdateOne {
 	tuo.mutation.SetPayload(s)
+	return tuo
+}
+
+// SetNillablePayload sets the "payload" field if the given value is not nil.
+func (tuo *TaskUpdateOne) SetNillablePayload(s *string) *TaskUpdateOne {
+	if s != nil {
+		tuo.SetPayload(*s)
+	}
 	return tuo
 }
 
