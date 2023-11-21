@@ -35,10 +35,26 @@ func (tlu *TaskLogUpdate) SetFinishedAt(t time.Time) *TaskLogUpdate {
 	return tlu
 }
 
+// SetNillableFinishedAt sets the "finished_at" field if the given value is not nil.
+func (tlu *TaskLogUpdate) SetNillableFinishedAt(t *time.Time) *TaskLogUpdate {
+	if t != nil {
+		tlu.SetFinishedAt(*t)
+	}
+	return tlu
+}
+
 // SetResult sets the "result" field.
 func (tlu *TaskLogUpdate) SetResult(u uint8) *TaskLogUpdate {
 	tlu.mutation.ResetResult()
 	tlu.mutation.SetResult(u)
+	return tlu
+}
+
+// SetNillableResult sets the "result" field if the given value is not nil.
+func (tlu *TaskLogUpdate) SetNillableResult(u *uint8) *TaskLogUpdate {
+	if u != nil {
+		tlu.SetResult(*u)
+	}
 	return tlu
 }
 
@@ -178,10 +194,26 @@ func (tluo *TaskLogUpdateOne) SetFinishedAt(t time.Time) *TaskLogUpdateOne {
 	return tluo
 }
 
+// SetNillableFinishedAt sets the "finished_at" field if the given value is not nil.
+func (tluo *TaskLogUpdateOne) SetNillableFinishedAt(t *time.Time) *TaskLogUpdateOne {
+	if t != nil {
+		tluo.SetFinishedAt(*t)
+	}
+	return tluo
+}
+
 // SetResult sets the "result" field.
 func (tluo *TaskLogUpdateOne) SetResult(u uint8) *TaskLogUpdateOne {
 	tluo.mutation.ResetResult()
 	tluo.mutation.SetResult(u)
+	return tluo
+}
+
+// SetNillableResult sets the "result" field if the given value is not nil.
+func (tluo *TaskLogUpdateOne) SetNillableResult(u *uint8) *TaskLogUpdateOne {
+	if u != nil {
+		tluo.SetResult(*u)
+	}
 	return tluo
 }
 
