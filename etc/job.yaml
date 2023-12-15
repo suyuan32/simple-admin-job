@@ -26,11 +26,6 @@ RedisConf:
   Host: redis-server:6379
   Type: node
 
-Prometheus:
-  Host: 0.0.0.0
-  Port: 4005
-  Path: /metrics
-
 AsynqConf:
 # if you do not use WithRedisConf, you should uncomment the configuration below
 
