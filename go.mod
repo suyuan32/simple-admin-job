@@ -2,8 +2,6 @@ module github.com/suyuan32/simple-admin-job
 
 go 1.21.0
 
-toolchain go1.21.5
-
 replace github.com/zeromicro/go-zero v1.6.0 => github.com/suyuan32/simple-admin-tools v1.6.2
 
 require (
