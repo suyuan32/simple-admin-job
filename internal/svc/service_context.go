@@ -16,8 +16,8 @@ package svc
 
 import (
 	"github.com/hibiken/asynq"
+	"github.com/redis/go-redis/v9"
 	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/core/stores/redis"
 
 	"github.com/suyuan32/simple-admin-job/ent"
 	"github.com/suyuan32/simple-admin-job/internal/config"
@@ -27,7 +27,7 @@ import (
 type ServiceContext struct {
 	Config         config.Config
 	DB             *ent.Client
-	Redis          *redis.Redis
+	Redis          *redis.Client
 	AsynqServer    *asynq.Server
 	AsynqScheduler *asynq.Scheduler
 	AsynqPTM       *asynq.PeriodicTaskManager
@@ -43,9 +43,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:         c,
 		DB:             db,
-		AsynqServer:    c.AsynqConf.WithRedisConf(c.RedisConf).NewServer(),
+		AsynqServer:    c.AsynqConf.WithOriginalRedisConf(c.RedisConf).NewServer(),
 		AsynqScheduler: c.AsynqConf.NewScheduler(),
 		AsynqPTM:       c.AsynqConf.NewPeriodicTaskManager(periodicconfig.NewEntConfigProvider(db)),
-		Redis:          redis.MustNewRedis(c.RedisConf),
+		Redis:          c.RedisConf.MustNewRedis(),
 	}
 }
