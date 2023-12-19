@@ -24,7 +24,6 @@ Log:
 
 RedisConf:
   Host: redis-server:6379
-  Type: node
 
 AsynqConf:
 # if you do not use WithRedisConf, you should uncomment the configuration below
