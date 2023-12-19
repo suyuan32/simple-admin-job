@@ -14,7 +14,6 @@ DatabaseConf:
 
 RedisConf:
   Host: 127.0.0.1:6379
-  Type: node
 
 Log:
   ServiceName: jobRpcLogger
