@@ -199,8 +199,8 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/suyuan32/simple-admin-common v1.2.7 h1:AV+x/G23IPkfoxgdy3c045Iqc5nJ3yAcZhkqFii4t4M=
-github.com/suyuan32/simple-admin-common v1.2.7/go.mod h1:MI5f0TIeUpiXx7sVvmuYlOm5R5W/wAOBD4BU1nCCs4E=
+github.com/suyuan32/simple-admin-common v1.2.8 h1:fefZimkkC4eTsQ422alwHczMCFF8X547CagvtF5jg1A=
+github.com/suyuan32/simple-admin-common v1.2.8/go.mod h1:MI5f0TIeUpiXx7sVvmuYlOm5R5W/wAOBD4BU1nCCs4E=
 github.com/suyuan32/simple-admin-tools v1.6.3 h1:BgasHW7GBJfbOhQqvdnovATYpGEsEEd2PtGS0xfksuQ=
 github.com/suyuan32/simple-admin-tools v1.6.3/go.mod h1:TxS7kvMSnTI0HrqCXUjDoSfuQh+WfJ1x073DzVs3UAc=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
