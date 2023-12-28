@@ -27,7 +27,7 @@ import (
 type ServiceContext struct {
 	Config         config.Config
 	DB             *ent.Client
-	Redis          *redis.Client
+	Redis          redis.UniversalClient
 	AsynqServer    *asynq.Server
 	AsynqScheduler *asynq.Scheduler
 	AsynqPTM       *asynq.PeriodicTaskManager
@@ -46,6 +46,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AsynqServer:    c.AsynqConf.WithOriginalRedisConf(c.RedisConf).NewServer(),
 		AsynqScheduler: c.AsynqConf.NewScheduler(),
 		AsynqPTM:       c.AsynqConf.NewPeriodicTaskManager(periodicconfig.NewEntConfigProvider(db)),
-		Redis:          c.RedisConf.MustNewRedis(),
+		Redis:          c.RedisConf.MustNewUniversalRedis(),
 	}
 }
