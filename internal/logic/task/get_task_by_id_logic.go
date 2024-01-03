@@ -33,8 +33,8 @@ func (l *GetTaskByIdLogic) GetTaskById(in *job.IDReq) (*job.TaskInfo, error) {
 
 	return &job.TaskInfo{
 		Id:             &result.ID,
-		CreatedAt:      pointy.GetPointer(result.CreatedAt.Unix()),
-		UpdatedAt:      pointy.GetPointer(result.UpdatedAt.Unix()),
+		CreatedAt:      pointy.GetPointer(result.CreatedAt.UnixMilli()),
+		UpdatedAt:      pointy.GetPointer(result.UpdatedAt.UnixMilli()),
 		Status:         pointy.GetPointer(uint32(result.Status)),
 		Name:           &result.Name,
 		TaskGroup:      &result.TaskGroup,

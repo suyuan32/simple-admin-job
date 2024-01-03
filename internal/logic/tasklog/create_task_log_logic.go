@@ -29,7 +29,7 @@ func NewCreateTaskLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 
 func (l *CreateTaskLogLogic) CreateTaskLog(in *job.TaskLogInfo) (*job.BaseIDResp, error) {
 	result, err := l.svcCtx.DB.TaskLog.Create().
-		SetNotNilFinishedAt(pointy.GetTimePointer(in.FinishedAt, 0)).
+		SetNotNilFinishedAt(pointy.GetTimeMilliPointer(in.FinishedAt)).
 		SetNotNilResult(pointy.GetStatusPointer(in.Result)).
 		Save(l.ctx)
 

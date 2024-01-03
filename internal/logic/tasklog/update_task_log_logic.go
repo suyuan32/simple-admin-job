@@ -29,7 +29,7 @@ func NewUpdateTaskLogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upd
 
 func (l *UpdateTaskLogLogic) UpdateTaskLog(in *job.TaskLogInfo) (*job.BaseResp, error) {
 	err := l.svcCtx.DB.TaskLog.UpdateOneID(*in.Id).
-		SetNotNilFinishedAt(pointy.GetTimePointer(in.FinishedAt, 0)).
+		SetNotNilFinishedAt(pointy.GetTimeMilliPointer(in.FinishedAt)).
 		SetNotNilResult(pointy.GetStatusPointer(in.Result)).
 		Exec(l.ctx)
 
