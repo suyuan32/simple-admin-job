@@ -1,9 +1,9 @@
 FROM alpine:3.19
 
 # Define the project name | 定义项目名称
-ARG PROJECT=Job
+ARG PROJECT=job
 # Define the config file name | 定义配置文件名
-ARG CONFIG_FILE=Job.yaml
+ARG CONFIG_FILE=job.yaml
 # Define the author | 定义作者
 ARG AUTHOR="yuansu.china.work@gmail.com"
 
