@@ -3,38 +3,13 @@ syntax = "proto3";
 package job;
 option go_package="./job";
 
-message PageInfoReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
+message IDReq {
+  uint64 id = 1;
 }
 
 message TaskListResp {
   uint64 total = 1;
   repeated TaskInfo data = 2;
-}
-
-message TaskListReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  optional string name = 3;
-  optional string task_group = 4;
-}
-
-//  base message
-message Empty {}
-
-message BaseIDResp {
-  uint64 id = 1;
-  string msg = 2;
-}
-
-message UUIDReq {
-  string id = 1;
-}
-
-message BaseUUIDResp {
-  string id = 1;
-  string msg = 2;
 }
 
 message TaskLogListReq {
@@ -44,24 +19,14 @@ message TaskLogListReq {
   optional uint32 result = 4;
 }
 
-message IDsReq {
-  repeated uint64 ids = 1;
-}
+//  base message
+message Empty {}
 
-message UUIDsReq {
-  repeated string ids = 1;
-}
-
-message TaskInfo {
-  optional uint64 id = 1;
-  optional int64 created_at = 2;
-  optional int64 updated_at = 3;
-  optional uint32 status = 4;
-  optional string name = 5;
-  optional string task_group = 6;
-  optional string cron_expression = 7;
-  optional string pattern = 8;
-  optional string payload = 9;
+message TaskListReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string name = 3;
+  optional string task_group = 4;
 }
 
 message TaskLogInfo {
@@ -78,12 +43,47 @@ message TaskLogListResp {
   repeated TaskLogInfo data = 2;
 }
 
-message IDReq {
-  uint64 id = 1;
+message TaskInfo {
+  optional uint64 id = 1;
+  optional int64 created_at = 2;
+  optional int64 updated_at = 3;
+  optional uint32 status = 4;
+  optional string name = 5;
+  optional string task_group = 6;
+  optional string cron_expression = 7;
+  optional string pattern = 8;
+  optional string payload = 9;
+}
+
+message UUIDsReq {
+  repeated string ids = 1;
+}
+
+message UUIDReq {
+  string id = 1;
 }
 
 message BaseResp {
   string msg = 1;
+}
+
+message PageInfoReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+}
+
+message IDsReq {
+  repeated uint64 ids = 1;
+}
+
+message BaseUUIDResp {
+  string id = 1;
+  string msg = 2;
+}
+
+message BaseIDResp {
+  uint64 id = 1;
+  string msg = 2;
 }
 
 service Job {
