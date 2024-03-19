@@ -3,8 +3,35 @@ syntax = "proto3";
 package job;
 option go_package="./job";
 
+message IDsReq {
+  repeated uint64 ids = 1;
+}
+
+message BaseResp {
+  string msg = 1;
+}
+
+message PageInfoReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+}
+
+message TaskLogListResp {
+  uint64 total = 1;
+  repeated TaskLogInfo data = 2;
+}
+
 message IDReq {
   uint64 id = 1;
+}
+
+message UUIDReq {
+  string id = 1;
+}
+
+message BaseIDResp {
+  uint64 id = 1;
+  string msg = 2;
 }
 
 message TaskListResp {
@@ -12,36 +39,8 @@ message TaskListResp {
   repeated TaskInfo data = 2;
 }
 
-message TaskLogListReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  optional uint64 task_id = 3;
-  optional uint32 result = 4;
-}
-
 //  base message
 message Empty {}
-
-message TaskListReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  optional string name = 3;
-  optional string task_group = 4;
-}
-
-message TaskLogInfo {
-  optional uint64 id = 1;
-  optional int64 created_at = 2;
-  optional int64 updated_at = 3;
-  optional int64 started_at = 4;
-  optional int64 finished_at = 5;
-  optional uint32 result = 6;
-}
-
-message TaskLogListResp {
-  uint64 total = 1;
-  repeated TaskLogInfo data = 2;
-}
 
 message TaskInfo {
   optional uint64 id = 1;
@@ -55,25 +54,17 @@ message TaskInfo {
   optional string payload = 9;
 }
 
+message TaskLogInfo {
+  optional uint64 id = 1;
+  optional int64 created_at = 2;
+  optional int64 updated_at = 3;
+  optional int64 started_at = 4;
+  optional int64 finished_at = 5;
+  optional uint32 result = 6;
+}
+
 message UUIDsReq {
   repeated string ids = 1;
-}
-
-message UUIDReq {
-  string id = 1;
-}
-
-message BaseResp {
-  string msg = 1;
-}
-
-message PageInfoReq {
-  uint64 page = 1;
-  uint64 page_size = 2;
-}
-
-message IDsReq {
-  repeated uint64 ids = 1;
 }
 
 message BaseUUIDResp {
@@ -81,9 +72,18 @@ message BaseUUIDResp {
   string msg = 2;
 }
 
-message BaseIDResp {
-  uint64 id = 1;
-  string msg = 2;
+message TaskListReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string name = 3;
+  optional string task_group = 4;
+}
+
+message TaskLogListReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional uint64 task_id = 3;
+  optional uint32 result = 4;
 }
 
 service Job {
