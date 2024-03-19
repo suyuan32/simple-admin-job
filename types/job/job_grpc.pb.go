@@ -36,7 +36,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type JobClient interface {
-	// group: base
+	//  group: base
 	InitDatabase(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*BaseResp, error)
 	// Task management
 	// group: task
@@ -173,7 +173,7 @@ func (c *jobClient) DeleteTaskLog(ctx context.Context, in *IDsReq, opts ...grpc.
 // All implementations must embed UnimplementedJobServer
 // for forward compatibility
 type JobServer interface {
-	// group: base
+	//  group: base
 	InitDatabase(context.Context, *Empty) (*BaseResp, error)
 	// Task management
 	// group: task
