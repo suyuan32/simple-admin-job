@@ -111,7 +111,9 @@ func (t *TaskQuery) Page(
 		Size: pageSize,
 	}
 
-	count, err := t.Clone().Count(ctx)
+	query := t.Clone()
+	query.ctx.Fields = nil
+	count, err := query.Count(ctx)
 
 	if err != nil {
 		return nil, err
@@ -190,7 +192,9 @@ func (tl *TaskLogQuery) Page(
 		Size: pageSize,
 	}
 
-	count, err := tl.Clone().Count(ctx)
+	query := tl.Clone()
+	query.ctx.Fields = nil
+	count, err := query.Count(ctx)
 
 	if err != nil {
 		return nil, err
