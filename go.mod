@@ -8,7 +8,7 @@ require (
 	entgo.io/ent v0.13.1
 	github.com/hibiken/asynq v0.24.1
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/suyuan32/simple-admin-common v1.4.0
+	github.com/suyuan32/simple-admin-common v1.4.1
 	github.com/zeromicro/go-zero v1.6.4
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.33.1-0.20240408130810-98873a205002
@@ -98,7 +98,7 @@ require (
 	golang.org/x/tools v0.20.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240401170217-c3f982113cda // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240412170617-26222e5d3d56 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240415180920-8c6c420018be // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
