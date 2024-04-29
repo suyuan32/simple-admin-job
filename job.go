@@ -51,15 +51,13 @@ func main() {
 		}
 	})
 
-	go func() {
-		s.Start()
-	}()
-
 	serviceGroup := service.NewServiceGroup()
 	defer func() {
 		serviceGroup.Stop()
 		logx.Close()
 	}()
+
+	serviceGroup.Add(s)
 
 	serviceGroup.Add(mqtask.NewMQTask(ctx))
 	if c.TaskConf.EnableDPTask {
