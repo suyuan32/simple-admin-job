@@ -15,11 +15,11 @@ var (
 		{Name: "created_at", Type: field.TypeTime, Comment: "Create Time | 创建日期"},
 		{Name: "updated_at", Type: field.TypeTime, Comment: "Update Time | 修改日期"},
 		{Name: "status", Type: field.TypeUint8, Nullable: true, Comment: "Status 1: normal 2: ban | 状态 1 正常 2 禁用", Default: 1},
-		{Name: "name", Type: field.TypeString},
-		{Name: "task_group", Type: field.TypeString},
-		{Name: "cron_expression", Type: field.TypeString},
-		{Name: "pattern", Type: field.TypeString},
-		{Name: "payload", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Comment: "Task Name | 任务名称"},
+		{Name: "task_group", Type: field.TypeString, Comment: "Task Group | 任务分组"},
+		{Name: "cron_expression", Type: field.TypeString, Comment: "Cron expression | 定时任务表达式"},
+		{Name: "pattern", Type: field.TypeString, Comment: "Cron Pattern | 任务的模式 （用于区分和确定要执行的任务）"},
+		{Name: "payload", Type: field.TypeString, Comment: "The data used in cron (JSON string) | 任务需要的数据(JSON 字符串)"},
 	}
 	// SysTasksTable holds the schema information for the "sys_tasks" table.
 	SysTasksTable = &schema.Table{
