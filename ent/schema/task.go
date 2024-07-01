@@ -48,6 +48,7 @@ func (Task) Indexes() []ent.Index {
 
 func (Task) Annotations() []schema.Annotation {
 	return []schema.Annotation{
+		entsql.WithComments(true),
 		entsql.Annotation{Table: "sys_tasks"},
 	}
 }

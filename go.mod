@@ -10,7 +10,7 @@ require (
 	entgo.io/ent v0.13.1
 	github.com/hibiken/asynq v0.24.1
 	github.com/redis/go-redis/v9 v9.5.3
-	github.com/suyuan32/simple-admin-common v1.4.8
+	github.com/suyuan32/simple-admin-common v1.4.9
 	github.com/zeromicro/go-zero v1.6.6
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
@@ -65,7 +65,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/prometheus/client_golang v1.19.1 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.54.0 // indirect
+	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect

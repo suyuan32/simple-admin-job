@@ -20,12 +20,9 @@ func (TaskLog) Fields() []ent.Field {
 		field.Uint64("id"),
 		field.Time("started_at").Immutable().
 			Default(time.Now).
-			Comment("Task Started Time | 任务启动时间").
-			Annotations(entsql.WithComments(true)),
-		field.Time("finished_at").Comment("Task Finished Time | 任务完成时间").
-			Annotations(entsql.WithComments(true)),
-		field.Uint8("result").Comment("The Task Process Result | 任务执行结果").
-			Annotations(entsql.WithComments(true)),
+			Comment("Task Started Time | 任务启动时间"),
+		field.Time("finished_at").Comment("Task Finished Time | 任务完成时间"),
+		field.Uint8("result").Comment("The Task Process Result | 任务执行结果"),
 	}
 }
 
@@ -38,6 +35,7 @@ func (TaskLog) Edges() []ent.Edge {
 
 func (TaskLog) Annotations() []schema.Annotation {
 	return []schema.Annotation{
+		entsql.WithComments(true),
 		entsql.Annotation{Table: "sys_task_logs"},
 	}
 }
