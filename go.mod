@@ -7,8 +7,8 @@ replace github.com/zeromicro/go-zero v1.6.6 => github.com/suyuan32/simple-admin-
 require (
 	entgo.io/ent v0.13.1
 	github.com/hibiken/asynq v0.24.1
-	github.com/redis/go-redis/v9 v9.5.3
-	github.com/suyuan32/simple-admin-common v1.4.10
+	github.com/redis/go-redis/v9 v9.5.4
+	github.com/suyuan32/simple-admin-common v1.5.0
 	github.com/zeromicro/go-zero v1.6.6
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
@@ -94,7 +94,7 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240701130421-f6361c86f094 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240711142825-46eb208f015d // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
