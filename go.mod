@@ -2,14 +2,14 @@ module github.com/suyuan32/simple-admin-job
 
 go 1.22.5
 
-replace github.com/zeromicro/go-zero v1.6.6 => github.com/suyuan32/simple-admin-tools v1.6.15
+replace github.com/zeromicro/go-zero v1.7.0 => github.com/suyuan32/simple-admin-tools v1.7.0
 
 require (
 	entgo.io/ent v0.13.1
 	github.com/hibiken/asynq v0.24.1
-	github.com/redis/go-redis/v9 v9.6.0
-	github.com/suyuan32/simple-admin-common v1.5.1
-	github.com/zeromicro/go-zero v1.6.6
+	github.com/redis/go-redis/v9 v9.6.1
+	github.com/suyuan32/simple-admin-common v1.5.2
+	github.com/zeromicro/go-zero v1.7.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 )
@@ -45,7 +45,7 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.21.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.21.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -69,9 +69,9 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/zclconf/go-cty v1.15.0 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
-	go.etcd.io/etcd/client/v3 v3.5.14 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.15 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.15 // indirect
+	go.etcd.io/etcd/client/v3 v3.5.15 // indirect
 	go.opentelemetry.io/otel v1.28.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.28.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.28.0 // indirect
@@ -93,17 +93,17 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240711142825-46eb208f015d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240711142825-46eb208f015d // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240725223205-93522f1f2a9f // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240725223205-93522f1f2a9f // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.30.2 // indirect
-	k8s.io/apimachinery v0.30.2 // indirect
-	k8s.io/client-go v0.30.2 // indirect
+	k8s.io/api v0.30.3 // indirect
+	k8s.io/apimachinery v0.30.3 // indirect
+	k8s.io/client-go v0.30.3 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20240620174524-b456828f718b // indirect
-	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0 // indirect
+	k8s.io/kube-openapi v0.0.0-20240726031636-6f6746feab9c // indirect
+	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
