@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -85,7 +86,7 @@ func (tlq *TaskLogQuery) QueryTasks() *TaskQuery {
 // First returns the first TaskLog entity from the query.
 // Returns a *NotFoundError when no TaskLog was found.
 func (tlq *TaskLogQuery) First(ctx context.Context) (*TaskLog, error) {
-	nodes, err := tlq.Limit(1).All(setContextOp(ctx, tlq.ctx, "First"))
+	nodes, err := tlq.Limit(1).All(setContextOp(ctx, tlq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +109,7 @@ func (tlq *TaskLogQuery) FirstX(ctx context.Context) *TaskLog {
 // Returns a *NotFoundError when no TaskLog ID was found.
 func (tlq *TaskLogQuery) FirstID(ctx context.Context) (id uint64, err error) {
 	var ids []uint64
-	if ids, err = tlq.Limit(1).IDs(setContextOp(ctx, tlq.ctx, "FirstID")); err != nil {
+	if ids, err = tlq.Limit(1).IDs(setContextOp(ctx, tlq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -131,7 +132,7 @@ func (tlq *TaskLogQuery) FirstIDX(ctx context.Context) uint64 {
 // Returns a *NotSingularError when more than one TaskLog entity is found.
 // Returns a *NotFoundError when no TaskLog entities are found.
 func (tlq *TaskLogQuery) Only(ctx context.Context) (*TaskLog, error) {
-	nodes, err := tlq.Limit(2).All(setContextOp(ctx, tlq.ctx, "Only"))
+	nodes, err := tlq.Limit(2).All(setContextOp(ctx, tlq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +160,7 @@ func (tlq *TaskLogQuery) OnlyX(ctx context.Context) *TaskLog {
 // Returns a *NotFoundError when no entities are found.
 func (tlq *TaskLogQuery) OnlyID(ctx context.Context) (id uint64, err error) {
 	var ids []uint64
-	if ids, err = tlq.Limit(2).IDs(setContextOp(ctx, tlq.ctx, "OnlyID")); err != nil {
+	if ids, err = tlq.Limit(2).IDs(setContextOp(ctx, tlq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -184,7 +185,7 @@ func (tlq *TaskLogQuery) OnlyIDX(ctx context.Context) uint64 {
 
 // All executes the query and returns a list of TaskLogs.
 func (tlq *TaskLogQuery) All(ctx context.Context) ([]*TaskLog, error) {
-	ctx = setContextOp(ctx, tlq.ctx, "All")
+	ctx = setContextOp(ctx, tlq.ctx, ent.OpQueryAll)
 	if err := tlq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -206,7 +207,7 @@ func (tlq *TaskLogQuery) IDs(ctx context.Context) (ids []uint64, err error) {
 	if tlq.ctx.Unique == nil && tlq.path != nil {
 		tlq.Unique(true)
 	}
-	ctx = setContextOp(ctx, tlq.ctx, "IDs")
+	ctx = setContextOp(ctx, tlq.ctx, ent.OpQueryIDs)
 	if err = tlq.Select(tasklog.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -224,7 +225,7 @@ func (tlq *TaskLogQuery) IDsX(ctx context.Context) []uint64 {
 
 // Count returns the count of the given query.
 func (tlq *TaskLogQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, tlq.ctx, "Count")
+	ctx = setContextOp(ctx, tlq.ctx, ent.OpQueryCount)
 	if err := tlq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -242,7 +243,7 @@ func (tlq *TaskLogQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (tlq *TaskLogQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, tlq.ctx, "Exist")
+	ctx = setContextOp(ctx, tlq.ctx, ent.OpQueryExist)
 	switch _, err := tlq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -536,7 +537,7 @@ func (tlgb *TaskLogGroupBy) Aggregate(fns ...AggregateFunc) *TaskLogGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (tlgb *TaskLogGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, tlgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, tlgb.build.ctx, ent.OpQueryGroupBy)
 	if err := tlgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -584,7 +585,7 @@ func (tls *TaskLogSelect) Aggregate(fns ...AggregateFunc) *TaskLogSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (tls *TaskLogSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, tls.ctx, "Select")
+	ctx = setContextOp(ctx, tls.ctx, ent.OpQuerySelect)
 	if err := tls.prepareQuery(ctx); err != nil {
 		return err
 	}
