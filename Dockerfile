@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.20
 
 # Define the project name | 定义项目名称
 ARG PROJECT=job
