@@ -22,4 +22,4 @@ COPY ./etc/${CONFIG_FILE} ./etc/
 
 EXPOSE 9105
 
-ENTRYPOINT ./${PROJECT}_rpc -f etc/${CONFIG_FILE}
+ENTRYPOINT ["./${PROJECT}_rpc", "-f", "etc/${CONFIG_FILE}"]
