@@ -5,10 +5,10 @@ go 1.22.5
 replace github.com/zeromicro/go-zero v1.7.0 => github.com/suyuan32/simple-admin-tools v1.7.0
 
 require (
-	entgo.io/ent v0.13.1
+	entgo.io/ent v0.14.0
 	github.com/hibiken/asynq v0.24.1
 	github.com/redis/go-redis/v9 v9.6.1
-	github.com/suyuan32/simple-admin-common v1.5.2
+	github.com/suyuan32/simple-admin-common v1.5.3
 	github.com/zeromicro/go-zero v1.7.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
