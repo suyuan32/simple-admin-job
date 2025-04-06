@@ -24,6 +24,7 @@ var (
 	// SysTasksTable holds the schema information for the "sys_tasks" table.
 	SysTasksTable = &schema.Table{
 		Name:       "sys_tasks",
+		Comment:    "Task Configuration Table | 任务配置表",
 		Columns:    SysTasksColumns,
 		PrimaryKey: []*schema.Column{SysTasksColumns[0]},
 		Indexes: []*schema.Index{
@@ -45,6 +46,7 @@ var (
 	// SysTaskLogsTable holds the schema information for the "sys_task_logs" table.
 	SysTaskLogsTable = &schema.Table{
 		Name:       "sys_task_logs",
+		Comment:    "Task Log Table | 任务日志表",
 		Columns:    SysTaskLogsColumns,
 		PrimaryKey: []*schema.Column{SysTaskLogsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{

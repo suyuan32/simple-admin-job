@@ -12,7 +12,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/ent/task"
 )
 
-// Task is the model entity for the Task schema.
+// Task Configuration Table | 任务配置表
 type Task struct {
 	config `json:"-"`
 	// ID of the ent.
