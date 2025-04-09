@@ -37,6 +37,7 @@ func (TaskLog) Edges() []ent.Edge {
 func (TaskLog) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.WithComments(true),
+		schema.Comment("Task Log Table | 任务日志表"),
 		entsql.Annotation{Table: "sys_task_logs"},
 	}
 }

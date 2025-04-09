@@ -13,7 +13,7 @@ import (
 	"github.com/suyuan32/simple-admin-job/ent/tasklog"
 )
 
-// TaskLog is the model entity for the TaskLog schema.
+// Task Log Table | 任务日志表
 type TaskLog struct {
 	config `json:"-"`
 	// ID of the ent.
