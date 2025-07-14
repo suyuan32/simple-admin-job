@@ -4,13 +4,13 @@ go 1.24.0
 
 toolchain go1.24.2
 
-replace github.com/zeromicro/go-zero v1.8.5 => github.com/suyuan32/simple-admin-tools v1.8.5
+replace github.com/zeromicro/go-zero v1.8.5 => github.com/suyuan32/simple-admin-tools v1.8.5-stable
 
 require (
 	entgo.io/ent v0.14.4
 	github.com/hibiken/asynq v0.25.1
 	github.com/redis/go-redis/v9 v9.11.0
-	github.com/suyuan32/simple-admin-common v1.6.9
+	github.com/suyuan32/simple-admin-common v1.6.10
 	github.com/zeromicro/go-zero v1.8.5
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.6
